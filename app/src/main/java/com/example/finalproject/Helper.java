@@ -6,4 +6,8 @@ import java.util.ArrayList;
 
 public class Helper {
     static public ArrayList<Task> tasks;
+
+    static {
+        tasks = new ArrayList<>();
+    }
 }

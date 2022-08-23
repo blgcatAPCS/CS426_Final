@@ -1,6 +1,7 @@
 package com.example.task;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,19 +9,18 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finalproject.Helper;
 import com.example.finalproject.R;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private LayoutInflater layoutInflater;
     private ArrayList<Task> tasks;
 
-    public TaskAdapter(Context context, ArrayList<Task> _tasks){
+    public TaskAdapter(Context context, ArrayList<Task> _tasks) {
         layoutInflater = LayoutInflater.from(context);
         tasks = _tasks;
     }
@@ -32,6 +32,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return new TaskViewHolder(itemView, this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
         Task task = tasks.get(position);
@@ -40,18 +41,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.setDeadline(task.getFormattedDate());
 
         holder.setCheckBox(task.isDone());
-        holder.checkBox.setOnClickListener(v -> {
-
-        });
     }
 
     @Override
     public int getItemCount() {
-        if (Helper.tasks == null) return 0;
-        return Helper.tasks.size();
+        return tasks.size();
     }
 
-    public class TaskViewHolder extends RecyclerView.ViewHolder{
+    public class TaskViewHolder extends RecyclerView.ViewHolder {
         private CheckBox checkBox;
         private TextView taskName;
         private TextView deadline;
@@ -65,7 +62,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             loadComponent();
         }
 
-        private void loadComponent(){
+        private void loadComponent() {
             checkBox = itemView.findViewById(R.id.checkbox);
             taskName = itemView.findViewById(R.id.text_view_task_name);
             deadline = itemView.findViewById(R.id.text_view_select_deadline);
@@ -87,7 +84,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             this.taskName.setText(taskName);
         }
 
-        public void setDeadline(String deadline){
+        public void setDeadline(String deadline) {
             this.deadline.setText(deadline);
         }
     }

@@ -1,6 +1,9 @@
 package com.example.task;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.TaskStackBuilder;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,14 +16,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.finalproject.Helper;
 import com.example.finalproject.MainActivity;
 import com.example.finalproject.R;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +35,8 @@ public class TaskDetail extends AppCompatActivity {
     private EditText taskName, description;
     private TextView deadline;
     private Button saveButton;
+
+    private Task task;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -40,6 +48,11 @@ public class TaskDetail extends AppCompatActivity {
 
         setupSelectingDate();
         saveButton.setOnClickListener(v -> {
+            String stringDeadline = deadline.getText().toString();
+            if (stringDeadline == null || stringDeadline.length()==0){
+                Toast.makeText(getApplicationContext(), "You must select deadline", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Date selectedDeadline = null;
             try {
                 selectedDeadline = new SimpleDateFormat("dd/MM/yyyy").parse(deadline.getText().toString());
@@ -53,12 +66,17 @@ public class TaskDetail extends AppCompatActivity {
                 deadline.setTextColor(Color.RED);
                 Toast.makeText(getApplicationContext(), "You must select today or the day after", Toast.LENGTH_SHORT).show();
             } else {
-                Task task = new Task(taskName.getText().toString(), selectedDeadline, description.getText().toString());
-                if (Helper.tasks == null) {
-                    Helper.tasks = new ArrayList<>();
-                }
-                Helper.tasks.add(task);
-                Log.d("saveButton", Helper.tasks.toString());
+                Log.d("saveButton", "successfully");
+                Intent resultIntent = new Intent();
+                resultIntent.putStringArrayListExtra("newTask", new ArrayList<String>(){
+                    {
+                        add(taskName.getText().toString());
+                        add(deadline.getText().toString());
+                        add(description.getText().toString());
+                    }
+                });
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
             }
         });
     }
@@ -80,7 +98,11 @@ public class TaskDetail extends AppCompatActivity {
             DatePickerDialog dialog = new DatePickerDialog(TaskDetail.this, (view, year1, month1, dayOfMonth) -> {
                 Log.d("deadlineOnClickListener", "go in onDateSet");
                 month1++;
-                String date = dayOfMonth + "/" + month1 + "/" + year1;
+                String date = dayOfMonth + "/";
+                if (month1<10){
+                    date+= "0" + month1 + "/" + year1;
+                }
+                else date += month1 + "/" + year1;
                 deadline.setText(date);
             }, year, month, day);
             dialog.show();
