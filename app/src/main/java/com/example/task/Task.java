@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Task {
@@ -59,5 +60,10 @@ public class Task {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String getFormattedDate(){
+        return deadline.format(DateTimeFormatter.ofPattern("dd-MM-YYYY"));
     }
 }

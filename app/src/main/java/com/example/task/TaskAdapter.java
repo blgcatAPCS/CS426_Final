@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.finalproject.Helper;
 import com.example.finalproject.R;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
@@ -36,13 +37,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         Task task = tasks.get(position);
 
         holder.setTaskName(task.getName());
+        holder.setDeadline(task.getFormattedDate());
 
         holder.setCheckBox(task.isDone());
-        holder.checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.checkBox.setOnClickListener(v -> {
 
-            }
         });
     }
 
@@ -55,6 +54,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public class TaskViewHolder extends RecyclerView.ViewHolder{
         private CheckBox checkBox;
         private TextView taskName;
+        private TextView deadline;
         private TaskAdapter adapter;
 
 
@@ -68,6 +68,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         private void loadComponent(){
             checkBox = itemView.findViewById(R.id.checkbox);
             taskName = itemView.findViewById(R.id.text_view_task_name);
+            deadline = itemView.findViewById(R.id.text_view_select_deadline);
         }
 
         public boolean getCheckBox() {
@@ -84,6 +85,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         public void setTaskName(String taskName) {
             this.taskName.setText(taskName);
+        }
+
+        public void setDeadline(String deadline){
+            this.deadline.setText(deadline);
         }
     }
 }

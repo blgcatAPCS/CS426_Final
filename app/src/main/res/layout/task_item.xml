@@ -7,7 +7,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/checkbox"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/text_view_task_name"
+        app:layout_constraintBottom_toBottomOf="@id/text_view_select_deadline"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="16dp"/>
 
@@ -16,10 +17,27 @@
         android:layout_height="wrap_content"
         android:hint="Task name"
         app:layout_constraintLeft_toRightOf="@id/checkbox"
-        app:layout_constraintTop_toTopOf="@id/checkbox"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/checkbox"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         android:id="@+id/text_view_task_name"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Deadline: "
+        app:layout_constraintTop_toBottomOf="@id/text_view_task_name"
+        app:layout_constraintLeft_toRightOf="@id/checkbox"
+        android:id="@+id/text_view_deadline"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Deadline"
+        app:layout_constraintTop_toBottomOf="@id/text_view_task_name"
+        app:layout_constraintLeft_toRightOf="@id/text_view_deadline"
+        android:id="@+id/text_view_select_deadline"
+        android:paddingLeft="8dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

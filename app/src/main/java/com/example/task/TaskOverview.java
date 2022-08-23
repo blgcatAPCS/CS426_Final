@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toolbar;
 
 import com.example.finalproject.Helper;
 import com.example.finalproject.R;
@@ -33,6 +35,7 @@ public class TaskOverview extends AppCompatActivity {
         addTaskButton.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), TaskDetail.class);
             startActivity(intent);
+            taskAdapter.notifyAll();
         });
     }
 
