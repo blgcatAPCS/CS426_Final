@@ -1,13 +1,17 @@
 package com.example.task;
 
 import android.content.Context;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.os.Build;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,7 +22,7 @@ import com.example.finalproject.R;
 
 import java.util.ArrayList;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder>{
     private LayoutInflater layoutInflater;
     private ArrayList<Task> tasks;
 
@@ -41,8 +45,40 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         holder.setTaskName(task.getName());
         holder.setDeadline(task.getFormattedDate());
-
         holder.setCheckBox(task.isDone());
+
+        holder.taskMenu.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(v.getContext(), holder.taskMenu);
+            popupMenu.inflate(R.menu.task_menu);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()){
+                    case R.id.option_delete:
+                        Log.d("menuClicked", "delete item at " + holder.getAdapterPosition());
+                        removeItem(holder.getAdapterPosition());
+                        return true;
+
+                    case R.id.option_edit:
+                        Log.d("menuClicked", "edit selected");
+                        return true;
+
+                    default:
+                        return false;
+                }
+            });
+            popupMenu.show();
+        });
+    }
+
+    private void removeItem(int position) {
+        tasks.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, tasks.size());
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull TaskViewHolder holder) {
+        holder.itemView.setOnLongClickListener(null);
+        super.onViewRecycled(holder);
     }
 
     @Override
@@ -50,10 +86,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return tasks.size();
     }
 
-    public class TaskViewHolder extends RecyclerView.ViewHolder {
+    public static class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
         private CheckBox checkBox;
         private TextView taskName;
         private TextView deadline;
+        private ImageView taskMenu;
         private TaskAdapter adapter;
 
 
@@ -62,24 +99,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             adapter = taskAdapter;
 
             loadComponent();
+
+            itemView.setOnCreateContextMenuListener(this);
         }
 
         private void loadComponent() {
             checkBox = itemView.findViewById(R.id.checkbox);
-            checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (checkBox.isChecked()){
-                        taskName.setPaintFlags(taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    }
-                    else {
-                        taskName.setPaintFlags(taskName.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-                    }
-                }
-            });
-
             taskName = itemView.findViewById(R.id.text_view_task_name);
             deadline = itemView.findViewById(R.id.text_view_select_deadline);
+            taskMenu = itemView.findViewById(R.id.image_view_option_menu);
         }
 
         public boolean getCheckBox() {
@@ -100,6 +128,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         public void setDeadline(String deadline) {
             this.deadline.setText(deadline);
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.add(Menu.NONE,R.id.option_edit, Menu.NONE, "Edit task");
+            menu.add(Menu.NONE,R.id.option_delete, Menu.NONE, "Delete task");
         }
     }
 }

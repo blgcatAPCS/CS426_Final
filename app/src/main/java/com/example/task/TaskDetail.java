@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.finalproject.Helper;
 import com.example.finalproject.MainActivity;
@@ -86,6 +87,9 @@ public class TaskDetail extends AppCompatActivity {
         deadline = findViewById(R.id.text_view_select_deadline);
         description = findViewById(R.id.edit_text_description);
         saveButton = findViewById(R.id.button_save_task);
+
+        Toolbar toolbar = findViewById(R.id.my_tool_bar);
+        setSupportActionBar(toolbar);
     }
 
     private void setupSelectingDate() {

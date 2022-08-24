@@ -8,8 +8,10 @@
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/activity_task_detail.xml" value="0.2" />
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/activity_task_overview.xml" value="0.1500453309156845" />
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/appbar.xml" value="0.1" />
-        <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/task_item.xml" value="0.7545871559633027" />
+        <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/task_item.xml" value="0.33" />
+        <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/toolbar.xml" value="0.1" />
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/menu/main_menu.xml" value="0.18298418127404875" />
+        <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/menu/task_menu.xml" value="0.5125" />
       </map>
     </option>
   </component>
