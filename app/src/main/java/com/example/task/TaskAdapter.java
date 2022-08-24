@@ -1,6 +1,8 @@
 package com.example.task;
 
 import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +66,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         private void loadComponent() {
             checkBox = itemView.findViewById(R.id.checkbox);
+            checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (checkBox.isChecked()){
+                        taskName.setPaintFlags(taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    }
+                    else {
+                        taskName.setPaintFlags(taskName.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+                    }
+                }
+            });
+
             taskName = itemView.findViewById(R.id.text_view_task_name);
             deadline = itemView.findViewById(R.id.text_view_select_deadline);
         }
