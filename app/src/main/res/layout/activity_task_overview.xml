@@ -7,11 +7,6 @@
     tools:context="com.example.task.TaskOverview"
     android:orientation="vertical">
 
-    <include
-        layout="@layout/appbar">
-
-    </include>
-
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

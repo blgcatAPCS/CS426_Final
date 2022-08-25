@@ -2,32 +2,26 @@ package com.example.task;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-import com.example.finalproject.Helper;
-import com.example.finalproject.MainActivity;
 import com.example.finalproject.R;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,7 +29,8 @@ import java.util.Date;
 public class TaskDetail extends AppCompatActivity {
     private EditText taskName, description;
     private TextView deadline;
-    private Button saveButton;
+    private Button saveButton, cancelButton;
+    private ActionBar actionBar;
 
     private Task task;
 
@@ -80,6 +75,13 @@ public class TaskDetail extends AppCompatActivity {
                 finish();
             }
         });
+
+        cancelButton = findViewById(R.id.button_cancel);
+        cancelButton.setOnClickListener(v -> {
+            Intent resultIntent = new Intent();
+            setResult(Activity.RESULT_CANCELED, resultIntent);
+            finish();
+        });
     }
 
     private void loadComponent() {
@@ -87,9 +89,8 @@ public class TaskDetail extends AppCompatActivity {
         deadline = findViewById(R.id.text_view_select_deadline);
         description = findViewById(R.id.edit_text_description);
         saveButton = findViewById(R.id.button_save_task);
-
-        Toolbar toolbar = findViewById(R.id.my_tool_bar);
-        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private void setupSelectingDate() {
@@ -110,6 +111,21 @@ public class TaskDetail extends AppCompatActivity {
                 deadline.setText(date);
             }, year, month, day);
             dialog.show();
+            deadline.setTextColor(Color.BLACK);
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Intent resultIntent = new Intent();
+                setResult(RESULT_CANCELED, resultIntent);
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
