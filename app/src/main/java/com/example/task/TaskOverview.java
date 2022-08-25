@@ -2,6 +2,7 @@ package com.example.task;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.finalproject.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -24,6 +29,7 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
     private TaskAdapter taskAdapter;
     private ArrayList<Task> tasks;
 
+    private final String LOAD_TASKS = "tasks";
     final int ADD_TASK_REQUEST = 0;
     final int EDIT_TASK_REQUEST = 1;
 
@@ -34,6 +40,7 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_overview);
 
+        loadData();
         loadComponent();
 
         if (rcvTasks != null) {
@@ -57,12 +64,21 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         });
     }
 
+    private void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences(LOAD_TASKS, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(LOAD_TASKS, null);
+        Type type = new TypeToken<ArrayList<Task>>(){}.getType();
+        tasks = gson.fromJson(json, type);
+
+        if (tasks == null)
+            tasks = new ArrayList<>();
+
+    }
+
     private void loadComponent() {
         rcvTasks = findViewById(R.id.rcv_tasks);
         addTaskButton = findViewById(R.id.button_add_task);
-
-        tasks = new ArrayList<>();
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -112,5 +128,21 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         intent.putExtra("position", position);
         intent.putExtra("task", task.toArrayListString());
         startActivityForResult(intent, EDIT_TASK_REQUEST);
+    }
+
+    @Override
+    protected void onDestroy() {
+        saveData();
+        super.onDestroy();
+    }
+
+    private void saveData() {
+        SharedPreferences sharedPreferences = getSharedPreferences(LOAD_TASKS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(tasks);
+        editor.putString("tasks", json);
+        editor.apply();
+        Log.d("save Data", json);
     }
 }
