@@ -5,27 +5,22 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Task implements Serializable {
     private String name;
-    private LocalDate deadline;
+    private Date deadline;
     private String description;
     private boolean done;
 
-    public Task (String _name, LocalDate _deadLine, String _description){
-        setName(_name);
-        setDeadline(_deadLine);
-        setDescription(_description);
-        setDone(false);
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Task(String _name, String _deadline, String _description){
+    public Task(String _name, String _deadline, String _description) throws ParseException {
         setName(_name);
         setDeadline(_deadline);
         setDescription(_description);
@@ -35,7 +30,7 @@ public class Task implements Serializable {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Task (String _name, Date _deadline, String _description){
         setName(_name);
-        setDeadline(_deadline.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        setDeadline(_deadline);
         setDescription(_description);
         setDone(false);
     }
@@ -48,16 +43,17 @@ public class Task implements Serializable {
         this.name = name;
     }
 
-    public LocalDate getDeadline() {
+    public Date getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
+    public void setDeadline(Date deadline) {
         this.deadline = deadline;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void setDeadline(String deadline){
-        this.deadline = LocalDate.parse(deadline, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    public void setDeadline(String deadline) throws ParseException {
+        this.deadline = new SimpleDateFormat("dd/MM/yyyy").parse(deadline);
     }
 
     public String getDescription() {
@@ -77,8 +73,17 @@ public class Task implements Serializable {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public String getFormattedDate(){
-        return deadline.format(DateTimeFormatter.ofPattern("dd-MM-YYYY"));
+    public String getFormattedDateDeadline(){
+        return new SimpleDateFormat("dd/MM/yyyy").format(deadline);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ArrayList<String> toArrayListString(){
+        return new ArrayList<String>(){{
+            add(name);
+            add(getFormattedDateDeadline());
+            add(description);
+        }};
     }
 
     @Override

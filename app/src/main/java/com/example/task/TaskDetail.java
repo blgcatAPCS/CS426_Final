@@ -32,7 +32,7 @@ public class TaskDetail extends AppCompatActivity {
     private Button saveButton, cancelButton;
     private ActionBar actionBar;
 
-    private Task task;
+    private int position;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -71,12 +71,13 @@ public class TaskDetail extends AppCompatActivity {
                         add(description.getText().toString());
                     }
                 });
+                resultIntent.putExtra("position", position);
+                Log.d("saveButton", "position" + position);
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();
             }
         });
 
-        cancelButton = findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(v -> {
             Intent resultIntent = new Intent();
             setResult(Activity.RESULT_CANCELED, resultIntent);
@@ -89,8 +90,31 @@ public class TaskDetail extends AppCompatActivity {
         deadline = findViewById(R.id.text_view_select_deadline);
         description = findViewById(R.id.edit_text_description);
         saveButton = findViewById(R.id.button_save_task);
+        if (getIntent().getBooleanExtra("Add", false)){
+            addActivity();
+        }
+        else{
+            updateActivity();
+        }
+        cancelButton = findViewById(R.id.button_cancel);
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void updateActivity() {
+        saveButton.setText("Save");
+        ArrayList<String> task = getIntent().getStringArrayListExtra("task");
+        if (task!=null){
+            taskName.setText(task.get(0));
+            deadline.setText(task.get(1));
+            description.setText(task.get(2));
+        }
+        position = getIntent().getIntExtra("position", -1);
+        Log.d("updateActivity", "position: " + position);
+    }
+
+    private void addActivity() {
+        saveButton.setText("Add");
     }
 
     private void setupSelectingDate() {

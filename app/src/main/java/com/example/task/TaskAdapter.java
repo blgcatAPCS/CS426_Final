@@ -1,12 +1,14 @@
 package com.example.task;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Build;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -23,12 +25,22 @@ import com.example.finalproject.R;
 import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder>{
-    private LayoutInflater layoutInflater;
-    private ArrayList<Task> tasks;
+    private final LayoutInflater layoutInflater;
+    private final ArrayList<Task> tasks;
+    private final Context mContext;
+
+    public interface CallbackInterface{
+        void onHandleSelection(int position, Task task);
+    }
+
+    private CallbackInterface callbackInterface;
 
     public TaskAdapter(Context context, ArrayList<Task> _tasks) {
+        mContext = context;
         layoutInflater = LayoutInflater.from(context);
         tasks = _tasks;
+
+        callbackInterface = (CallbackInterface) context;
     }
 
     @NonNull
@@ -44,7 +56,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         Task task = tasks.get(position);
 
         holder.setTaskName(task.getName());
-        holder.setDeadline(task.getFormattedDate());
+        holder.setDeadline(task.getFormattedDateDeadline());
         holder.setCheckBox(task.isDone());
 
         holder.taskMenu.setOnClickListener(v -> {
@@ -59,6 +71,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
                     case R.id.option_edit:
                         Log.d("menuClicked", "edit selected");
+                        editItem(holder.getAdapterPosition());
                         return true;
 
                     default:
@@ -67,6 +80,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             });
             popupMenu.show();
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void editItem(int adapterPosition) {
+        callbackInterface.onHandleSelection(adapterPosition, tasks.get(adapterPosition));
     }
 
     private void removeItem(int position) {
@@ -91,7 +109,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         private TextView taskName;
         private TextView deadline;
         private ImageView taskMenu;
-        private TaskAdapter adapter;
+        private final TaskAdapter adapter;
 
 
         public TaskViewHolder(@NonNull View itemView, TaskAdapter taskAdapter) {
@@ -108,6 +126,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskName = itemView.findViewById(R.id.text_view_task_name);
             deadline = itemView.findViewById(R.id.text_view_select_deadline);
             taskMenu = itemView.findViewById(R.id.image_view_option_menu);
+
+            checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (checkBox.isChecked()){
+                        taskName.setPaintFlags(taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    }
+                    else taskName.setPaintFlags(taskName.getPaintFlags() & ~ Paint.STRIKE_THRU_TEXT_FLAG);
+                }
+            });
         }
 
         public boolean getCheckBox() {
