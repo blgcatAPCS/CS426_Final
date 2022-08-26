@@ -58,7 +58,7 @@ public class TaskDetail extends AppCompatActivity {
             Date curDate = Calendar.getInstance().getTime();
             Log.d("saveButton", "selected Deadline: " + selectedDeadline.toString());
             Log.d("saveButton", "curDate: " + curDate);
-            if (!selectedDeadline.after(curDate)) {
+            if (selectedDeadline.before(curDate)) {
                 deadline.setTextColor(Color.RED);
                 Toast.makeText(getApplicationContext(), "You must select today or the day after", Toast.LENGTH_SHORT).show();
             } else {

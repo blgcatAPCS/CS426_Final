@@ -23,6 +23,8 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class TaskOverview extends AppCompatActivity implements TaskAdapter.CallbackInterface {
     private RecyclerView rcvTasks;
@@ -117,7 +119,8 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
     private void addTask(ArrayList<String> newTaskInfo) throws ParseException {
         Task task = new Task(newTaskInfo.get(0), newTaskInfo.get(1), newTaskInfo.get(2));
         tasks.add(task);
-        taskAdapter.notifyItemInserted(tasks.size() - 1);
+        Collections.sort(tasks, Comparator.comparing(Task::getDeadline));
+        taskAdapter.notifyItemRangeChanged(0, tasks.size());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -145,4 +148,5 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         editor.apply();
         Log.d("save Data", json);
     }
+
 }
