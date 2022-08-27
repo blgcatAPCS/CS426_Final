@@ -42,7 +42,7 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_overview);
 
-        //loadData();
+        loadData();
         if (tasks==null) tasks=new ArrayList<>();
         loadComponent();
 
@@ -100,7 +100,7 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         } else if (requestCode == EDIT_TASK_REQUEST && resultCode == Activity.RESULT_OK) {
             updateTask(data.getIntExtra("position", -1), newTaskInfo);
         }
-        Collections.sort(tasks, Comparator.comparing(Task::getDeadline));
+        Collections.sort(tasks, Comparator.comparing(Task::getDeadline).thenComparing(Task::getPriority, Comparator.reverseOrder()));
         taskAdapter.notifyItemRangeChanged(0, tasks.size());
     }
 
