@@ -17,6 +17,12 @@
             android:name="com.example.folders.FolderList"
             android:exported="false" />
         <activity
+            android:name="com.example.task.TaskDetail"
+            android:exported="false"/>
+        <activity
+            android:name="com.example.task.TaskOverview"
+            android:exported="true"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

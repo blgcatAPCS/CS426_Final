@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:longClickable="true"
+    android:paddingBottom="8dp">
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkbox"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:paddingRight="4dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Task name"
+        app:layout_constraintLeft_toRightOf="@id/checkbox"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/checkbox"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        android:id="@+id/text_view_task_name"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Deadline: "
+        app:layout_constraintTop_toBottomOf="@id/text_view_task_name"
+        app:layout_constraintLeft_toRightOf="@id/checkbox"
+        android:padding="2dp"
+        android:id="@+id/text_view_deadline"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Deadline"
+        app:layout_constraintTop_toTopOf="@id/text_view_deadline"
+        app:layout_constraintBottom_toBottomOf="@id/text_view_deadline"
+        app:layout_constraintLeft_toRightOf="@id/text_view_deadline"
+        android:id="@+id/text_view_select_deadline"
+        android:paddingLeft="8dp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_more_vert_24"
+        android:id="@+id/image_view_option_menu"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="20dp"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/text_view_priority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Priority: "
+        android:padding="2dp"
+        app:layout_constraintLeft_toLeftOf="@id/text_view_deadline"
+        app:layout_constraintTop_toBottomOf="@id/text_view_deadline" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/text_view_select_deadline"
+        app:layout_constraintTop_toTopOf="@id/text_view_priority"
+        app:layout_constraintBottom_toBottomOf="@id/text_view_priority"
+        android:src="@drawable/ic_baseline_trending_up_24"
+        android:id="@+id/image_view_priority"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
