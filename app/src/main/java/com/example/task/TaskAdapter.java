@@ -20,6 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.Priority.Priority;
+import com.example.finalproject.Helper;
 import com.example.finalproject.R;
 
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         void onHandleSelection(int position, Task task);
     }
 
-    private CallbackInterface callbackInterface;
+    private final CallbackInterface callbackInterface;
 
     public TaskAdapter(Context context, ArrayList<Task> _tasks) {
         mContext = context;
@@ -55,9 +57,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
         Task task = tasks.get(position);
 
+        Log.d("onBindView", task.toString());
+
         holder.setTaskName(task.getName());
-        holder.setDeadline(task.getFormattedDateDeadline());
+        holder.setDeadline(Helper.dateToString(task.getDeadline()));
         holder.setCheckBox(task.isDone());
+        holder.setPriority(task.getPriority());
 
         holder.taskMenu.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(v.getContext(), holder.taskMenu);
@@ -104,13 +109,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return tasks.size();
     }
 
-    public static class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
+    public class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
         private CheckBox checkBox;
         private TextView taskName;
         private TextView deadline;
         private ImageView taskMenu;
         private final TaskAdapter adapter;
-
+        private ImageView priorityImage;
 
         public TaskViewHolder(@NonNull View itemView, TaskAdapter taskAdapter) {
             super(itemView);
@@ -127,15 +132,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             deadline = itemView.findViewById(R.id.text_view_select_deadline);
             taskMenu = itemView.findViewById(R.id.image_view_option_menu);
 
-            checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (checkBox.isChecked()){
-                        taskName.setPaintFlags(taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    }
-                    else taskName.setPaintFlags(taskName.getPaintFlags() & ~ Paint.STRIKE_THRU_TEXT_FLAG);
+            checkBox.setOnClickListener(v -> {
+                if (checkBox.isChecked()){
+                    taskName.setPaintFlags(taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 }
+                else taskName.setPaintFlags(taskName.getPaintFlags() & ~ Paint.STRIKE_THRU_TEXT_FLAG);
             });
+
+            priorityImage = itemView.findViewById(R.id.image_view_priority);
         }
 
         public boolean getCheckBox() {
@@ -156,6 +160,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         public void setDeadline(String deadline) {
             this.deadline.setText(deadline);
+        }
+
+        public void setPriority(Priority priority){
+            if (priority==null) priority=Priority.HIGH;
+            Log.d("setPriority", String.valueOf(Helper.getPriorityIconSrc(priority)));
+            Log.d("setPriority", String.valueOf(priorityImage.getId()));
+            priorityImage.setImageResource(Helper.getPriorityIconSrc(priority));
         }
 
         @Override

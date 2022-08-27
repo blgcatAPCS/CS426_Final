@@ -15,11 +15,11 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finalproject.Helper;
 import com.example.finalproject.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -42,7 +42,8 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_overview);
 
-        loadData();
+        //loadData();
+        if (tasks==null) tasks=new ArrayList<>();
         loadComponent();
 
         if (rcvTasks != null) {
@@ -88,39 +89,35 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("TaskDetailResult", "Request Code: " + requestCode + " Result code: " + resultCode);
+        ArrayList<String> newTaskInfo = data.getStringArrayListExtra("newTask");
+        if (newTaskInfo==null) return;
         if (requestCode == ADD_TASK_REQUEST && resultCode == Activity.RESULT_OK) {
-            ArrayList<String> newTaskInfo = data.getStringArrayListExtra("newTask");
-            if (newTaskInfo != null) {
-                try {
-                    addTask(newTaskInfo);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+            try {
+                addTask(newTaskInfo);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         } else if (requestCode == EDIT_TASK_REQUEST && resultCode == Activity.RESULT_OK) {
-            ArrayList<String> newTaskInfo = data.getStringArrayListExtra("newTask");
-            if (newTaskInfo != null) {
-                updateTask(data.getIntExtra("position", -1), newTaskInfo);
-            }
+            updateTask(data.getIntExtra("position", -1), newTaskInfo);
         }
+        Collections.sort(tasks, Comparator.comparing(Task::getDeadline));
+        taskAdapter.notifyItemRangeChanged(0, tasks.size());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateTask(int position, ArrayList<String> newTaskInfo) {
+        Log.d("updateTask", newTaskInfo.toString());
         try {
-            tasks.set(position, new Task(newTaskInfo.get(0), newTaskInfo.get(1), newTaskInfo.get(2)));
+            tasks.set(position, new Task(newTaskInfo));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        taskAdapter.notifyItemChanged(position);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void addTask(ArrayList<String> newTaskInfo) throws ParseException {
-        Task task = new Task(newTaskInfo.get(0), newTaskInfo.get(1), newTaskInfo.get(2));
+        Task task = new Task(newTaskInfo);
         tasks.add(task);
-        Collections.sort(tasks, Comparator.comparing(Task::getDeadline));
-        taskAdapter.notifyItemRangeChanged(0, tasks.size());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -129,7 +126,7 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         Log.d("editTask", task.toString());
         Intent intent = new Intent(getApplicationContext(), TaskDetail.class);
         intent.putExtra("position", position);
-        intent.putExtra("task", task.toArrayListString());
+        intent.putExtra("newTask", task.toArrayListString());
         startActivityForResult(intent, EDIT_TASK_REQUEST);
     }
 
@@ -148,5 +145,4 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         editor.apply();
         Log.d("save Data", json);
     }
-
 }

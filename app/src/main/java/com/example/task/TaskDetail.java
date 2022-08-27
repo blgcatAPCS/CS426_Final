@@ -8,8 +8,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +21,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.Priority.PrioritySpinnerAdapter;
+import com.example.finalproject.Helper;
 import com.example.finalproject.R;
 
 import java.text.ParseException;
@@ -31,7 +36,9 @@ public class TaskDetail extends AppCompatActivity {
     private TextView deadline;
     private Button saveButton, cancelButton;
     private ActionBar actionBar;
+    private Spinner prioritySpinner;
 
+    private int priority;
     private int position;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -41,41 +48,23 @@ public class TaskDetail extends AppCompatActivity {
         setContentView(R.layout.activity_task_detail);
 
         loadComponent();
-
+        loadData();
         setupSelectingDate();
         saveButton.setOnClickListener(v -> {
-            String stringDeadline = deadline.getText().toString();
-            if (stringDeadline == null || stringDeadline.length()==0){
-                Toast.makeText(getApplicationContext(), "You must select deadline", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Date selectedDeadline = null;
-            try {
-                selectedDeadline = new SimpleDateFormat("dd/MM/yyyy").parse(deadline.getText().toString());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            Date curDate = Calendar.getInstance().getTime();
-            Log.d("saveButton", "selected Deadline: " + selectedDeadline.toString());
-            Log.d("saveButton", "curDate: " + curDate);
-            if (selectedDeadline.before(curDate)) {
-                deadline.setTextColor(Color.RED);
-                Toast.makeText(getApplicationContext(), "You must select today or the day after", Toast.LENGTH_SHORT).show();
-            } else {
-                Log.d("saveButton", "successfully");
-                Intent resultIntent = new Intent();
-                resultIntent.putStringArrayListExtra("newTask", new ArrayList<String>(){
-                    {
-                        add(taskName.getText().toString());
-                        add(deadline.getText().toString());
-                        add(description.getText().toString());
-                    }
-                });
-                resultIntent.putExtra("position", position);
-                Log.d("saveButton", "position" + position);
-                setResult(Activity.RESULT_OK, resultIntent);
-                finish();
-            }
+            if (!checkValid()) return;
+            Intent resultIntent = new Intent();
+            resultIntent.putStringArrayListExtra("newTask", new ArrayList<String>(){
+                {
+                    add(taskName.getText().toString());
+                    add(deadline.getText().toString());
+                    add(String.valueOf(priority));
+                    add(description.getText().toString());
+                    add("false");
+                }
+            });
+            resultIntent.putExtra("position", position);
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
         });
 
         cancelButton.setOnClickListener(v -> {
@@ -85,36 +74,89 @@ public class TaskDetail extends AppCompatActivity {
         });
     }
 
-    private void loadComponent() {
-        taskName = findViewById(R.id.edit_text_task_name);
-        deadline = findViewById(R.id.text_view_select_deadline);
-        description = findViewById(R.id.edit_text_description);
-        saveButton = findViewById(R.id.button_save_task);
+    private void loadData() {
         if (getIntent().getBooleanExtra("Add", false)){
             addActivity();
         }
         else{
             updateActivity();
         }
+    }
+
+    private boolean checkValid(){
+        String stringDeadline = deadline.getText().toString();
+        if (taskName.getText() == null || taskName.getText().toString().length()==0){
+            Toast.makeText(getApplicationContext(), "Your task must have name.", Toast.LENGTH_SHORT).show();
+            return  false;
+        }
+        if (stringDeadline.length()==0){
+            deadline.setTextColor(Color.RED);
+            Toast.makeText(getApplicationContext(), "You must select deadline.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        Date selectedDeadline = null;
+        try {
+            selectedDeadline = new SimpleDateFormat("dd/MM/yyyy").parse(deadline.getText().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date curDate = Calendar.getInstance().getTime();
+        if (selectedDeadline.before(curDate)) {
+            deadline.setTextColor(Color.RED);
+            Toast.makeText(getApplicationContext(), "You must select today or the day after", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void loadComponent() {
+        taskName = findViewById(R.id.edit_text_task_name);
+        deadline = findViewById(R.id.text_view_select_deadline);
+        description = findViewById(R.id.edit_text_description);
+        saveButton = findViewById(R.id.button_save_task);
         cancelButton = findViewById(R.id.button_cancel);
+        loadPrioritySpinner();
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+    private void loadPrioritySpinner() {
+        int[] icon = {R.drawable.ic_baseline_trending_up_24, R.drawable.ic_baseline_trending_flat_24, R.drawable.ic_baseline_trending_down_24};
+        String[] priorityText = {"High", "Medium", "Low"};
+        prioritySpinner = findViewById(R.id.spinner_priority);
+        prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                priority=position+1;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        PrioritySpinnerAdapter adapter = new PrioritySpinnerAdapter(getApplicationContext(), icon, priorityText);
+        prioritySpinner.setAdapter(adapter);
+    }
+
     private void updateActivity() {
         saveButton.setText("Save");
-        ArrayList<String> task = getIntent().getStringArrayListExtra("task");
+        ArrayList<String> task = getIntent().getStringArrayListExtra("newTask");
         if (task!=null){
             taskName.setText(task.get(0));
             deadline.setText(task.get(1));
-            description.setText(task.get(2));
+            priority = Integer.valueOf(task.get(2));
+            prioritySpinner.setSelection(priority-1);
+            description.setText(task.get(3));
         }
         position = getIntent().getIntExtra("position", -1);
-        Log.d("updateActivity", "position: " + position);
+        Log.d("updateActivity", "position: " + position + ", task: " + task);
     }
 
     private void addActivity() {
         saveButton.setText("Add");
+        prioritySpinner.setSelection(0);
     }
 
     private void setupSelectingDate() {
@@ -125,7 +167,6 @@ public class TaskDetail extends AppCompatActivity {
 
         deadline.setOnClickListener(v -> {
             DatePickerDialog dialog = new DatePickerDialog(TaskDetail.this, (view, year1, month1, dayOfMonth) -> {
-                Log.d("deadlineOnClickListener", "go in onDateSet");
                 month1++;
                 String date = dayOfMonth + "/";
                 if (month1<10){
