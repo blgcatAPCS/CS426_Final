@@ -1,14 +1,21 @@
-package folders;
+package com.example.folders;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.finalproject.R;
@@ -41,18 +48,15 @@ public class RecyclerFolderAdapter extends RecyclerView.Adapter<RecyclerFolderAd
 
         holder.tvFolderName.setText(folder.name);
 
+        // Khi nhấn vào 1 item thì sẽ dẫn đến TaskOverview
         holder.llRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent();
-//                intent.setComponent(new ComponentName("task", "TaskOverview"));
-//                Intent intent1 = new Intent(v.getContext(), TaskOverview.class);
-//                v.getContext().startActivityForResult(intent1, 1);
-
                 iClickItemFolderListener.onClickItemFolder(folder);
             }
         });
 
+        // Khi nhấn dữ lâu 1 item thì sẽ gợi ý Delete
         holder.llRow.setOnLongClickListener(new View.OnLongClickListener(){
 
             @Override
@@ -79,6 +83,27 @@ public class RecyclerFolderAdapter extends RecyclerView.Adapter<RecyclerFolderAd
                 return true;
             }
         });
+
+        // Khi nhấn vào nút 3 chấm thì cho Rename
+        holder.imageViewRenameFolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(v.getContext(), holder.imageViewRenameFolder);
+                popupMenu.inflate(R.menu.folder_menu);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getItemId() == R.id.option_rename_folder){
+                            iClickItemFolderListener.onClickRenameFolder(holder.getAdapterPosition());
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
+
     }
 
     @Override
@@ -90,13 +115,25 @@ public class RecyclerFolderAdapter extends RecyclerView.Adapter<RecyclerFolderAd
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView tvFolderName;
         LinearLayout llRow;
+        ImageView imageViewRenameFolder;
+      //  LinearLayout llRow;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvFolderName = itemView.findViewById(R.id.text_view_folder_name);
             llRow = itemView.findViewById(R.id.llRow);
+            imageViewRenameFolder = itemView.findViewById(R.id.image_rename_folder);
+
+            itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                @Override
+                public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                    menu.add(Menu.NONE,R.id.option_rename_folder, Menu.NONE, "Rename");
+                }
+            });
         }
+
+
     }
 }
 

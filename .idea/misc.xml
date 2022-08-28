@@ -3,12 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-
-        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.1335" />
-        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final/app/src/main/res/layout/activity_folder_list.xml" value="0.1" />
-        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final/app/src/main/res/layout/add_update_layout.xml" value="0.1" />
-        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final/app/src/main/res/layout/folder_row.xml" value="0.1" />
-
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.173" />
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/drawable/ic_baseline_trending_down_24.xml" value="0.12" />
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/drawable/ic_baseline_trending_flat_24.xml" value="0.12" />
@@ -25,7 +19,17 @@
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/menu/main_menu.xml" value="0.18298418127404875" />
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/menu/task_menu.xml" value="0.5125" />
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/xml/tool_bar.xml" value="0.11559383499546691" />
-
+        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/layout/activity_folder_list.xml" value="0.1" />
+        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/layout/activity_task_detail.xml" value="0.1" />
+        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/layout/activity_task_overview.xml" value="0.1" />
+        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/layout/add_update_layout.xml" value="0.1875" />
+        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/layout/folder_row.xml" value="0.264" />
+        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/layout/priority_spinner_adapter.xml" value="0.25" />
+        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/layout/task_item.xml" value="0.19882246376811594" />
+        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/menu/folder_menu.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/menu/main_actions.xml" value="0.1" />
+        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/menu/task_menu.xml" value="0.264" />
       </map>
     </option>
   </component>
