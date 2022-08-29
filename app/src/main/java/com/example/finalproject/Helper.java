@@ -3,6 +3,7 @@ package com.example.finalproject;
 import android.util.Log;
 
 import com.example.Priority.Priority;
+import com.example.folders.Folder;
 import com.example.task.Task;
 
 import java.text.ParseException;
@@ -13,11 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Helper {
-    static public ArrayList<Task> tasks;
-    static private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    private static Map<Integer, Priority> intToPriority = new HashMap<Integer, Priority>();
-    private static int[] priorityIcon = {R.drawable.ic_baseline_trending_up_24, R.drawable.ic_baseline_trending_flat_24, R.drawable.ic_baseline_trending_down_24};
-    private static String[] priorityText = {"High", "Medium", "Low"};
+    static public ArrayList<Folder> projects;
+    static private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private static final Map<Integer, Priority> intToPriority = new HashMap<Integer, Priority>();
+    private static final int[] priorityIcon = {R.drawable.ic_baseline_trending_up_24, R.drawable.ic_baseline_trending_flat_24, R.drawable.ic_baseline_trending_down_24};
+    private static final String[] priorityText = {"High", "Medium", "Low"};
 
     static {
         for (Priority type : Priority.values()){

@@ -1,8 +1,6 @@
 package com.example.task;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Build;
 import android.util.Log;
@@ -25,6 +23,8 @@ import com.example.finalproject.Helper;
 import com.example.finalproject.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder>{
     private final LayoutInflater layoutInflater;
@@ -45,6 +45,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         callbackInterface = (CallbackInterface) context;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -85,6 +86,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             });
             popupMenu.show();
         });
+        changeTextBasedCheckBox(holder.getCheckBox(), holder.taskName, position);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -117,6 +119,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         private final TaskAdapter adapter;
         private ImageView priorityImage;
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         public TaskViewHolder(@NonNull View itemView, TaskAdapter taskAdapter) {
             super(itemView);
             adapter = taskAdapter;
@@ -126,6 +129,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             itemView.setOnCreateContextMenuListener(this);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         private void loadComponent() {
             checkBox = itemView.findViewById(R.id.checkbox);
             taskName = itemView.findViewById(R.id.text_view_task_name);
@@ -133,10 +137,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskMenu = itemView.findViewById(R.id.image_view_option_menu);
 
             checkBox.setOnClickListener(v -> {
-                if (checkBox.isChecked()){
-                    taskName.setPaintFlags(taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                }
-                else taskName.setPaintFlags(taskName.getPaintFlags() & ~ Paint.STRIKE_THRU_TEXT_FLAG);
+                int position = this.getAdapterPosition();
+                changeTextBasedCheckBox(checkBox.isChecked(), taskName, position);
+                Task newTask = tasks.get(position);
+                notifyAdapterItemMoved(position, newTask);
             });
 
             priorityImage = itemView.findViewById(R.id.image_view_priority);
@@ -174,5 +178,32 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             menu.add(Menu.NONE,R.id.option_edit, Menu.NONE, "Edit task");
             menu.add(Menu.NONE,R.id.option_delete, Menu.NONE, "Delete task");
         }
+    }
+
+    void changeTextBasedCheckBox(boolean isChecked, TextView taskName, int position){
+        if (isChecked){
+            taskName.setPaintFlags(taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+        else taskName.setPaintFlags(taskName.getPaintFlags() & ~ Paint.STRIKE_THRU_TEXT_FLAG);
+        tasks.get(position).setDone(isChecked);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void notifyAdapterWholeDataSetChanged(){
+        Collections.sort(tasks, Comparator.comparing(Task::isDone).thenComparing(Task::getDeadline).thenComparing(Task::getPriority, Comparator.reverseOrder()));
+        notifyItemRangeChanged(0, tasks.size());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void notifyAdapterItemMoved(int oldPosition, Task newTask){
+        tasks.remove(oldPosition);
+        int newPosition = Collections.binarySearch(tasks,
+                newTask,
+                Comparator.comparing(Task::isDone).thenComparing(Task::getDeadline).thenComparing(Task::getPriority, Comparator.reverseOrder()));
+        if (newPosition<0){
+            newPosition = -newPosition-1;
+        }
+        tasks.add(newPosition, newTask);
+        notifyItemMoved(oldPosition, newPosition);
     }
 }
