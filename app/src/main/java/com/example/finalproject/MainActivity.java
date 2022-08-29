@@ -11,6 +11,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.folders.ProjectFragment;
+import com.example.today.TodayFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,8 +38,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TodayFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_today);
+            startTodayView();
         }
     }
 
@@ -65,18 +65,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_project:
-                getSupportActionBar().setTitle("Your projects");
                 startProjectView();
                 break;
 
             case R.id.nav_today:
-                getSupportActionBar().setTitle("Your today tasks");
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TodayFragment()).commit();
+                startTodayView();
                 break;
 
             case R.id.nav_calendar:
-                getSupportActionBar().setTitle("Calendar");
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CalendarFragment()).commit();
+                startCalendarView();
                 break;
 
             default:
@@ -92,5 +89,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Your Projects");
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProjectFragment()).commit();
+    }
+
+    private void startCalendarView() {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle("Calendar");
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CalendarFragment()).commit();
+    }
+
+    private void startTodayView() {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle("Today tasks");
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TodayFragment()).commit();
     }
 }

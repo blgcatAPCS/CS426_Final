@@ -120,6 +120,7 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateTask(int position, ArrayList<String> newTaskInfo) throws ParseException {
         Log.d("updateTask", newTaskInfo.toString());
+        if (position == -1) throw new IllegalArgumentException("Position invalid");
         taskAdapter.notifyAdapterItemMoved(position, new Task(newTaskInfo));
     }
 
@@ -134,13 +135,6 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
     }
 
     private void saveData() {
-        /*SharedPreferences sharedPreferences = getSharedPreferences(LOAD_TASKS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(tasks);
-        editor.putString("tasks", json);
-        editor.apply();
-        Log.d("save Data", json);*/
         Log.d("saveData", "folderPosition: " + folderPosition + " taskItem: " + tasks);
         Intent resultIntent = new Intent();
         Bundle bundle = new Bundle();

@@ -92,18 +92,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void editItem(int adapterPosition) {
         callbackInterface.onHandleSelection(adapterPosition, tasks.get(adapterPosition));
-    }
+        }
 
     private void removeItem(int position) {
         tasks.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, tasks.size());
-    }
-
-    @Override
-    public void onViewRecycled(@NonNull TaskViewHolder holder) {
-        holder.itemView.setOnLongClickListener(null);
-        super.onViewRecycled(holder);
     }
 
     @Override
@@ -196,6 +190,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void notifyAdapterItemMoved(int oldPosition, Task newTask){
+        notifyItemChanged(oldPosition);
         tasks.remove(oldPosition);
         int newPosition = Collections.binarySearch(tasks,
                 newTask,

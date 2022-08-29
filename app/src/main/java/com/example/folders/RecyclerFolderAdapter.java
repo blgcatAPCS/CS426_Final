@@ -39,7 +39,7 @@ public class RecyclerFolderAdapter extends RecyclerView.Adapter<RecyclerFolderAd
     @Override
     public void onBindViewHolder(@NonNull FolderViewHolder holder, int position) {
         Folder folder = listOfFolders.get(position);
-        holder.tvFolderName.setText(folder.name);
+        holder.tvFolderName.setText(folder.getName());
         // Khi nhấn vào 1 item thì sẽ dẫn đến TaskOverview
         holder.llRow.setOnClickListener(v -> iClickItemFolderListener.onClickItemFolder(folder, position));
 

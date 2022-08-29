@@ -3,7 +3,7 @@ package com.example.folders;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,17 +18,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finalproject.Helper;
 import com.example.finalproject.R;
 import com.example.task.Task;
 import com.example.task.TaskOverview;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ProjectFragment extends Fragment {
@@ -48,21 +47,9 @@ public class ProjectFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_project, container, false);
-        loadData();
+        listOfFolders = Helper.loadFolders(this.getActivity());
         initView();
         return view;
-    }
-
-    private void loadData() {
-        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(LOAD_FOLDERS, this.getContext().MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString(LOAD_FOLDERS, null);
-        Type type = new TypeToken<ArrayList<Folder>>() {
-        }.getType();
-        listOfFolders = gson.fromJson(json, type);
-
-        if (listOfFolders == null)
-            listOfFolders = new ArrayList<>();
     }
 
     private void initView() {
@@ -115,7 +102,7 @@ public class ProjectFragment extends Fragment {
     public void onClickGoToTaskOverview(Folder folder, int position) {
         Intent intent = new Intent(view.getContext(), TaskOverview.class);
         Bundle args = new Bundle();
-        args.putSerializable(TASK_ITEM, folder.listOfTasks);
+        args.putSerializable(TASK_ITEM, folder.getListOfTasks());
         args.putInt(FOLDER_POSITION, position);
 
         intent.putExtra("BUNDLE", args);
@@ -134,7 +121,7 @@ public class ProjectFragment extends Fragment {
         buttonOk.setText("Ok");
         tvTitle.setText("Rename");
 
-        editTextFolderName.setText(folder.name);
+        editTextFolderName.setText(folder.getName());
 
         buttonOk.setOnClickListener(v -> {
             if (editTextFolderName.getText().toString().equals("")) {
@@ -142,7 +129,7 @@ public class ProjectFragment extends Fragment {
                 return;
             }
 
-            folder.name = editTextFolderName.getText().toString();
+            folder.setName(editTextFolderName.getText().toString());
             adapter.notifyItemChanged(position);
             dialog.dismiss();
         });
@@ -159,9 +146,9 @@ public class ProjectFragment extends Fragment {
             Log.d("projectTaskResult", "bundle exists: " + (bundle != null));
             int position = bundle.getInt(FOLDER_POSITION, -1);
             if (position != -1) {
-                listOfFolders.get(position).listOfTasks = (ArrayList<Task>) bundle.getSerializable(TASK_ITEM);
+                listOfFolders.get(position).setListOfTasks((ArrayList<Task>) bundle.getSerializable(TASK_ITEM));
             }
-            Log.d("projectTaskResult", "position: " + position + " listOfFolders: " + listOfFolders.get(position).listOfTasks);
+            Log.d("projectTaskResult", "position: " + position + " listOfFolders: " + listOfFolders.get(position).getListOfTasks());
         }
     }
 
@@ -181,24 +168,17 @@ public class ProjectFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveData() {
-        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(LOAD_FOLDERS, this.getContext().MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(listOfFolders);
-        editor.putString("folders", json);
-        editor.apply();
-    }
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDestroy() {
-        saveData();
+        Helper.saveData(this.getActivity(), listOfFolders);
         super.onDestroy();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStop() {
-        saveData();
+        Helper.saveData(this.getActivity(), listOfFolders);
         super.onStop();
     }
 }

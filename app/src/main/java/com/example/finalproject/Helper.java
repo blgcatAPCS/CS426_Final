@@ -1,14 +1,26 @@
 package com.example.finalproject;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.Priority.Priority;
 import com.example.folders.Folder;
 import com.example.task.Task;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +31,7 @@ public class Helper {
     private static final Map<Integer, Priority> intToPriority = new HashMap<Integer, Priority>();
     private static final int[] priorityIcon = {R.drawable.ic_baseline_trending_up_24, R.drawable.ic_baseline_trending_flat_24, R.drawable.ic_baseline_trending_down_24};
     private static final String[] priorityText = {"High", "Medium", "Low"};
+    private static final String LOAD_FOLDERS = "folders";
 
     static {
         for (Priority type : Priority.values()){
@@ -52,5 +65,56 @@ public class Helper {
 
     public static String getPriorityString(Priority priority){
         return priorityText[priority.getIntValue()-1];
+    }
+
+    public static ArrayList<Folder> loadFolders(Context context){
+        ArrayList<Folder> listOfFolders;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(LOAD_FOLDERS, context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(LOAD_FOLDERS, null);
+        Type type = new TypeToken<ArrayList<Folder>>() {
+        }.getType();
+        listOfFolders = gson.fromJson(json, type);
+
+        if (listOfFolders == null)
+            listOfFolders = new ArrayList<>();
+
+        Log.d("loadFolders", json);
+
+        return listOfFolders;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static void saveData(Context context, ArrayList<Folder> listOfFolders){
+        listOfFolders=sortTaskInProjects(listOfFolders);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(LOAD_FOLDERS, context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(listOfFolders);
+        editor.putString("folders", json);
+        editor.apply();
+
+        Log.d("saveData", json);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private static ArrayList<Folder> sortTaskInProjects(ArrayList<Folder> listOfFolders) {
+        for (Folder folder : listOfFolders){
+            ArrayList<Task> tasks = folder.getListOfTasks();
+            Collections.sort(tasks, Comparator.comparing(Task::isDone).thenComparing(Task::getDeadline).thenComparing(Task::getPriority, Comparator.reverseOrder()));
+            folder.setListOfTasks(tasks);
+        }
+        return listOfFolders;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static boolean isSameDay(Date date1, Date date2) {
+        LocalDate localDate1 = date1.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        LocalDate localDate2 = date2.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        return localDate1.isEqual(localDate2);
     }
 }

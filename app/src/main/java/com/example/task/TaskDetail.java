@@ -83,6 +83,7 @@ public class TaskDetail extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private boolean checkValid(){
         String stringDeadline = deadline.getText().toString();
         if (taskName.getText() == null || taskName.getText().toString().length()==0){
@@ -94,14 +95,9 @@ public class TaskDetail extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "You must select deadline.", Toast.LENGTH_SHORT).show();
             return false;
         }
-        Date selectedDeadline = null;
-        try {
-            selectedDeadline = new SimpleDateFormat("dd/MM/yyyy").parse(deadline.getText().toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        Date selectedDeadline = Helper.stringToDate(deadline.getText().toString());
         Date curDate = Calendar.getInstance().getTime();
-        if (selectedDeadline.before(curDate)) {
+        if (!Helper.isSameDay(selectedDeadline, curDate) && selectedDeadline.before(curDate)) {
             deadline.setTextColor(Color.RED);
             Toast.makeText(getApplicationContext(), "You must select today or the day after", Toast.LENGTH_SHORT).show();
             return false;
