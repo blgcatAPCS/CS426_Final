@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="350dp"
     android:layout_height="wrap_content"
-    android:background="#71d3de"
-    android:paddingLeft="21dp"
-    android:paddingRight="21dp"
-    android:paddingBottom="11dp"
-    android:orientation="vertical">
+        android:background="@color/colorAccent"
+        android:paddingLeft="21dp"
+        android:paddingRight="21dp"
+        android:paddingBottom="11dp"
+        android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         android:textColor="#fff"
         android:id="@+id/text_view_title"
         android:layout_margin="21dp"
-        android:text="Add Folder"/>
+        android:text="Add Project"/>
 
     <EditText
         android:layout_width="match_parent"

@@ -49,10 +49,6 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
             rcvTasks.setAdapter(taskAdapter);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
             rcvTasks.setLayoutManager(layoutManager);
-
-            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rcvTasks.getContext(), ((LinearLayoutManager) layoutManager).getOrientation());
-
-            rcvTasks.addItemDecoration(dividerItemDecoration);
         }
 
         registerForContextMenu(rcvTasks);

@@ -2,16 +2,18 @@ package com.example.folders;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,28 +25,44 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.finalproject.R;
 import com.example.task.Task;
 import com.example.task.TaskOverview;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ProjectFragment extends Fragment {
-    private final int GO_TO_TASKOVERVIEW_REQUEST_CODE = 2;
-    private String TASK_ITEM = "task";
-    private String FOLDER_POSITION = "position";
-
-    private View view;
-
     RecyclerFolderAdapter adapter;
     ImageView btnOpenDialog;
     RecyclerView recyclerView;
-    ArrayList<Folder> listOfFolders = new ArrayList<>();
+    ArrayList<Folder> listOfFolders;
+
+    private View view;
+
+    private final int GO_TO_TASKOVERVIEW_REQUEST_CODE = 2;
+    private final String TASK_ITEM = "task";
+    private final String FOLDER_POSITION = "position";
+    private final String LOAD_FOLDERS = "folders";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_project, container, false);
+        loadData();
         initView();
-
         return view;
+    }
+
+    private void loadData() {
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(LOAD_FOLDERS, this.getContext().MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(LOAD_FOLDERS, null);
+        Type type = new TypeToken<ArrayList<Folder>>() {
+        }.getType();
+        listOfFolders = gson.fromJson(json, type);
+
+        if (listOfFolders == null)
+            listOfFolders = new ArrayList<>();
     }
 
     private void initView() {
@@ -63,15 +81,13 @@ public class ProjectFragment extends Fragment {
 
                 if (!editFolderName.getText().toString().equals("")) {
                     name = editFolderName.getText().toString();
-                }
-                else{
-                    Toast.makeText(getView().getContext(), "Please Enter Folder Name", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getView().getContext(), "Please Enter Projects Name", Toast.LENGTH_SHORT).show();
                 }
 
                 listOfFolders.add(new Folder(name));
 
                 adapter.notifyItemInserted(listOfFolders.size() - 1);
-
                 recyclerView.scrollToPosition(listOfFolders.size() - 1);
 
                 dialog.dismiss();
@@ -81,7 +97,18 @@ public class ProjectFragment extends Fragment {
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        adapter = new RecyclerFolderAdapter(listOfFolders, (folder, position) -> onClickGoToTaskOverview(folder, position));
+        adapter = new RecyclerFolderAdapter(listOfFolders, new IClickItemFolderListener() {
+            @Override
+            public void onClickItemFolder(Folder folder, int position) {
+                onClickGoToTaskOverview(folder, position);
+            }
+
+            @Override
+            public void onClickRenameFolder(int position) {
+                renameFolder(position);
+            }
+
+        });
         recyclerView.setAdapter(adapter);
     }
 
@@ -95,11 +122,39 @@ public class ProjectFragment extends Fragment {
         startActivityForResult(intent, GO_TO_TASKOVERVIEW_REQUEST_CODE);
     }
 
+    private void renameFolder(int position) {
+        Folder folder = listOfFolders.get(position);
+        Dialog dialog = new Dialog(this.getContext());
+        dialog.setContentView(R.layout.add_update_layout);
+
+        EditText editTextFolderName = dialog.findViewById(R.id.edit_text_folder_name);
+        Button buttonOk = dialog.findViewById(R.id.button_add);
+        TextView tvTitle = dialog.findViewById(R.id.text_view_title);
+
+        buttonOk.setText("Ok");
+        tvTitle.setText("Rename");
+
+        editTextFolderName.setText(folder.name);
+
+        buttonOk.setOnClickListener(v -> {
+            if (editTextFolderName.getText().toString().equals("")) {
+                Toast.makeText(getContext(), "Please Enter Projects Name", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            folder.name = editTextFolderName.getText().toString();
+            adapter.notifyItemChanged(position);
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("projectTaskResult", "requestCode: " + requestCode + " resultCode: " + resultCode);
-        if (requestCode == GO_TO_TASKOVERVIEW_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+        if (requestCode == GO_TO_TASKOVERVIEW_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Bundle bundle = data.getBundleExtra("BUNDLE");
             Log.d("projectTaskResult", "bundle exists: " + (bundle != null));
             int position = bundle.getInt(FOLDER_POSITION, -1);
@@ -108,5 +163,42 @@ public class ProjectFragment extends Fragment {
             }
             Log.d("projectTaskResult", "position: " + position + " listOfFolders: " + listOfFolders.get(position).listOfTasks);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("folder list result", listOfFolders);
+                intent.putExtras(bundle);
+                this.getActivity().setResult(Activity.RESULT_OK, intent);
+                this.getActivity().finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void saveData() {
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(LOAD_FOLDERS, this.getContext().MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(listOfFolders);
+        editor.putString("folders", json);
+        editor.apply();
+    }
+
+    @Override
+    public void onDestroy() {
+        saveData();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+        saveData();
+        super.onStop();
     }
 }
