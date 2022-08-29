@@ -25,8 +25,6 @@ import com.example.Priority.PrioritySpinnerAdapter;
 import com.example.finalproject.Helper;
 import com.example.finalproject.R;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,7 +51,7 @@ public class TaskDetail extends AppCompatActivity {
         saveButton.setOnClickListener(v -> {
             if (!checkValid()) return;
             Intent resultIntent = new Intent();
-            resultIntent.putStringArrayListExtra("newTask", new ArrayList<String>(){
+            resultIntent.putStringArrayListExtra("newTask", new ArrayList<String>() {
                 {
                     add(taskName.getText().toString());
                     add(deadline.getText().toString());
@@ -75,22 +73,21 @@ public class TaskDetail extends AppCompatActivity {
     }
 
     private void loadData() {
-        if (getIntent().getBooleanExtra("Add", false)){
+        if (getIntent().getBooleanExtra("Add", false)) {
             addActivity();
-        }
-        else{
+        } else {
             updateActivity();
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private boolean checkValid(){
+    private boolean checkValid() {
         String stringDeadline = deadline.getText().toString();
-        if (taskName.getText() == null || taskName.getText().toString().length()==0){
+        if (taskName.getText() == null || taskName.getText().toString().length() == 0) {
             Toast.makeText(getApplicationContext(), "Your task must have name.", Toast.LENGTH_SHORT).show();
-            return  false;
+            return false;
         }
-        if (stringDeadline.length()==0){
+        if (stringDeadline.length() == 0) {
             deadline.setTextColor(Color.RED);
             Toast.makeText(getApplicationContext(), "You must select deadline.", Toast.LENGTH_SHORT).show();
             return false;
@@ -123,7 +120,7 @@ public class TaskDetail extends AppCompatActivity {
         prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                priority=position+1;
+                priority = position + 1;
             }
 
             @Override
@@ -139,11 +136,11 @@ public class TaskDetail extends AppCompatActivity {
     private void updateActivity() {
         saveButton.setText("Save");
         ArrayList<String> task = getIntent().getStringArrayListExtra("newTask");
-        if (task!=null){
+        if (task != null) {
             taskName.setText(task.get(0));
             deadline.setText(task.get(1));
             priority = Integer.valueOf(task.get(2));
-            prioritySpinner.setSelection(priority-1);
+            prioritySpinner.setSelection(priority - 1);
             description.setText(task.get(3));
         }
         position = getIntent().getIntExtra("position", -1);
@@ -165,10 +162,9 @@ public class TaskDetail extends AppCompatActivity {
             DatePickerDialog dialog = new DatePickerDialog(TaskDetail.this, (view, year1, month1, dayOfMonth) -> {
                 month1++;
                 String date = dayOfMonth + "/";
-                if (month1<10){
-                    date+= "0" + month1 + "/" + year1;
-                }
-                else date += month1 + "/" + year1;
+                if (month1 < 10) {
+                    date += "0" + month1 + "/" + year1;
+                } else date += month1 + "/" + year1;
                 deadline.setText(date);
             }, year, month, day);
             dialog.show();
@@ -178,7 +174,7 @@ public class TaskDetail extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 Intent resultIntent = new Intent();
                 setResult(RESULT_CANCELED, resultIntent);

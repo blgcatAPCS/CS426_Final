@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,20 +18,17 @@ import com.example.finalproject.R;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class TaskOverview extends AppCompatActivity implements TaskAdapter.CallbackInterface {
-    private RecyclerView rcvTasks;
-    private TaskAdapter taskAdapter;
-    private ArrayList<Task> tasks;
-    private ImageView addTaskButton;
-
     private final String LOAD_TASKS = "tasks";
     private final String FOLDER_POSITION = "position";
     private final String TASK_ITEM = "task";
     private final int ADD_TASK_REQUEST = 0;
     private final int EDIT_TASK_REQUEST = 1;
+    private RecyclerView rcvTasks;
+    private TaskAdapter taskAdapter;
+    private ArrayList<Task> tasks;
+    private ImageView addTaskButton;
     private int folderPosition;
 
     @Override

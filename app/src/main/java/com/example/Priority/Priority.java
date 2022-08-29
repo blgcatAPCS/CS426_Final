@@ -7,16 +7,16 @@ public enum Priority {
 
     private final int priority;
 
-    Priority(int priority){
+    Priority(int priority) {
         this.priority = priority;
     }
 
-    public int getIntValue(){
+    public int getIntValue() {
         return priority;
     }
 
-    public Priority getPriorityValue(){
-        switch (priority){
+    public Priority getPriorityValue() {
+        switch (priority) {
             case 1:
                 return Priority.HIGH;
 

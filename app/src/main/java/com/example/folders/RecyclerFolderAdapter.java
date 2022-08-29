@@ -19,9 +19,8 @@ import java.util.ArrayList;
 
 public class RecyclerFolderAdapter extends RecyclerView.Adapter<RecyclerFolderAdapter.FolderViewHolder> {
     private static final int OPEN_TASKOVERVIEW_REQUEST_CODE = 2;
-
-    ArrayList<Folder> listOfFolders;
     private final IClickItemFolderListener iClickItemFolderListener;
+    ArrayList<Folder> listOfFolders;
 
     RecyclerFolderAdapter(ArrayList<Folder> listOfFolders, IClickItemFolderListener listener) {
         this.listOfFolders = listOfFolders;

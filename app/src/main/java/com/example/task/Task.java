@@ -5,8 +5,8 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.finalproject.Helper;
 import com.example.Priority.Priority;
+import com.example.finalproject.Helper;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -38,19 +38,20 @@ public class Task implements Serializable {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Task(String _name, Date _deadline, String _description, Priority _priority){
+    public Task(String _name, Date _deadline, String _description, Priority _priority) {
         this(_name, _deadline, _description, _priority, false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Task(String _name, Date _deadline, String _description, boolean _done){
+    public Task(String _name, Date _deadline, String _description, boolean _done) {
         this(_name, _deadline, _description, Priority.LOW, _done);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Task(ArrayList<String> info) throws ParseException {
         Log.d("TaskArrayList", "info: " + info);
-        if (info.size()!=NUM_PROPERTY) throw new IllegalArgumentException("Info not enough argument");
+        if (info.size() != NUM_PROPERTY)
+            throw new IllegalArgumentException("Info not enough argument");
         setName(info.get(0));
         setDeadline(info.get(1));
         setPriority(Helper.getPriority(Integer.valueOf(info.get(2))));
@@ -96,9 +97,9 @@ public class Task implements Serializable {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public ArrayList<String> toArrayListString(){
-        Log.d("TaskToArray",String.valueOf(priority.getIntValue()));
-        return new ArrayList<String>(){{
+    public ArrayList<String> toArrayListString() {
+        Log.d("TaskToArray", String.valueOf(priority.getIntValue()));
+        return new ArrayList<String>() {{
             add(name);
             add(Helper.dateToString(deadline));
             add(String.valueOf(priority.getIntValue()));
@@ -126,7 +127,7 @@ public class Task implements Serializable {
         this.priority = priority;
     }
 
-    public void setPriority(int priority){
+    public void setPriority(int priority) {
         switch (priority) {
             case 3:
                 this.priority = Priority.LOW;

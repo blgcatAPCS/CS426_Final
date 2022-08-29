@@ -1,6 +1,5 @@
 package com.example.today;
 
-import android.app.Application;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -84,8 +83,8 @@ public class TodayFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void saveData() {
         ArrayList<Folder> folders = Helper.loadFolders(this.getActivity());
-        for (TodayTask todayTask : todayTasks){
-            Log.d("todayTask", "projectPos: " + todayTask.getiProject() + " taskPos: " + todayTask.getiTask() +" todayTask: " + todayTask.getTask().toString());
+        for (TodayTask todayTask : todayTasks) {
+            Log.d("todayTask", "projectPos: " + todayTask.getiProject() + " taskPos: " + todayTask.getiTask() + " todayTask: " + todayTask.getTask().toString());
             folders.get(todayTask.getiProject()).getListOfTasks().set(todayTask.getiTask(), todayTask.getTask());
         }
         Helper.saveData(this.getActivity(), folders);

@@ -2,41 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="350dp"
     android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:paddingLeft="21dp"
-        android:paddingRight="21dp"
-        android:paddingBottom="11dp"
-        android:orientation="vertical">
+    android:background="@color/colorAccent"
+    android:orientation="vertical"
+    android:paddingLeft="21dp"
+    android:paddingRight="21dp"
+    android:paddingBottom="11dp">
 
     <TextView
+        android:id="@+id/text_view_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:textColor="#fff"
-        android:id="@+id/text_view_title"
         android:layout_margin="21dp"
-        android:text="Add Project"/>
+        android:gravity="center"
+        android:text="Add Project"
+        android:textColor="#fff"
+        android:textSize="32sp"
+        android:textStyle="bold" />
 
     <EditText
+        android:id="@+id/edit_text_folder_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff"
-        android:padding="11dp"
-        android:id="@+id/edit_text_folder_name"
         android:hint="Enter Folder Name"
-        android:inputType="text"/>
+        android:inputType="text"
+        android:padding="11dp" />
 
     <Button
+        android:id="@+id/button_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add"
-        android:id="@+id/button_add"
-        android:backgroundTint="#fff"
+        android:layout_gravity="end"
         android:layout_marginTop="11dp"
-        android:textColor="#71d3de"
-        android:layout_gravity="end"/>
+        android:backgroundTint="#fff"
+        android:text="Add"
+        android:textColor="#71d3de" />
 
 </LinearLayout>

@@ -16,7 +16,7 @@ public class PrioritySpinnerAdapter extends BaseAdapter {
     private String[] priorityText;
     private LayoutInflater layoutInflater;
 
-    public PrioritySpinnerAdapter(Context context, int[] priorityIcon, String[] priorityText){
+    public PrioritySpinnerAdapter(Context context, int[] priorityIcon, String[] priorityText) {
         setContext(context);
         setPriorityIcon(priorityIcon);
         setPriorityText(priorityText);

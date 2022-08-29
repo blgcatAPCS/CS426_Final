@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.Priority.Priority;
 import com.example.finalproject.Helper;
 import com.example.finalproject.R;
-import com.example.task.Task;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,14 +61,34 @@ public class TodayTaskAdapter extends RecyclerView.Adapter<TodayTaskAdapter.Toda
         return todayTasks.size();
     }
 
-    public class TodayTaskViewHolder extends RecyclerView.ViewHolder{
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void notifyAdapterItemMoved(int position, TodayTask newTask) {
+        notifyItemChanged(position);
+        todayTasks.remove(position);
+        int newPosition = Collections.binarySearch(todayTasks,
+                newTask,
+                Comparator.comparing(TodayTask::isDone).thenComparing(TodayTask::getDeadline).thenComparing(TodayTask::getPriority, Comparator.reverseOrder()));
+        if (newPosition < 0) {
+            newPosition = -newPosition - 1;
+        }
+        todayTasks.add(newPosition, newTask);
+        notifyItemMoved(position, newPosition);
+    }
+
+    private void changeTextBasedCheckBox(boolean checked, TextView taskName, int position) {
+        if (checked) {
+            taskName.setPaintFlags(taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else taskName.setPaintFlags(taskName.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+        todayTasks.get(position).setDone(checked);
+    }
+
+    public class TodayTaskViewHolder extends RecyclerView.ViewHolder {
+        private final TodayTaskAdapter adapter;
         private CheckBox checkBox;
         private TextView taskName;
         private TextView deadline;
         private ImageView priority;
         private TextView project;
-
-        private final TodayTaskAdapter adapter;
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         public TodayTaskViewHolder(@NonNull View itemView, TodayTaskAdapter taskAdapter) {
@@ -138,27 +157,5 @@ public class TodayTaskAdapter extends RecyclerView.Adapter<TodayTaskAdapter.Toda
         public TodayTaskAdapter getAdapter() {
             return adapter;
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void notifyAdapterItemMoved(int position, TodayTask newTask) {
-        notifyItemChanged(position);
-        todayTasks.remove(position);
-        int newPosition = Collections.binarySearch(todayTasks,
-                newTask,
-                Comparator.comparing(TodayTask::isDone).thenComparing(TodayTask::getDeadline).thenComparing(TodayTask::getPriority, Comparator.reverseOrder()));
-        if (newPosition<0){
-            newPosition = -newPosition-1;
-        }
-        todayTasks.add(newPosition, newTask);
-        notifyItemMoved(position, newPosition);
-    }
-
-    private void changeTextBasedCheckBox(boolean checked, TextView taskName, int position) {
-        if (checked){
-            taskName.setPaintFlags(taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }
-        else taskName.setPaintFlags(taskName.getPaintFlags() & ~ Paint.STRIKE_THRU_TEXT_FLAG);
-        todayTasks.get(position).setDone(checked);
     }
 }

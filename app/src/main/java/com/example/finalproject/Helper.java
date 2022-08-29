@@ -26,24 +26,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Helper {
-    static public ArrayList<Folder> projects;
     static private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private static final Map<Integer, Priority> intToPriority = new HashMap<Integer, Priority>();
     private static final int[] priorityIcon = {R.drawable.ic_baseline_trending_up_24, R.drawable.ic_baseline_trending_flat_24, R.drawable.ic_baseline_trending_down_24};
     private static final String[] priorityText = {"High", "Medium", "Low"};
     private static final String LOAD_FOLDERS = "folders";
+    static public ArrayList<Folder> projects;
 
     static {
-        for (Priority type : Priority.values()){
+        for (Priority type : Priority.values()) {
             intToPriority.put(type.getIntValue(), type);
         }
     }
 
-    public static String dateToString (Date date) {
+    public static String dateToString(Date date) {
         return simpleDateFormat.format(date);
     }
 
-    public static Date stringToDate(String date){
+    public static Date stringToDate(String date) {
         try {
             return simpleDateFormat.parse(date);
         } catch (ParseException e) {
@@ -52,24 +52,24 @@ public class Helper {
         return null;
     }
 
-    public static Priority getPriority(int priority){
+    public static Priority getPriority(int priority) {
         Priority res = intToPriority.get(priority);
         if (res == null) throw new IllegalArgumentException("Value of priority is invalid");
         return res;
     }
 
-    public static int getPriorityIconSrc(Priority priority){
+    public static int getPriorityIconSrc(Priority priority) {
         Log.d("priorityIcon", "priority: " + priority + " value: " + priority.getIntValue());
-        return priorityIcon[priority.getIntValue()-1];
+        return priorityIcon[priority.getIntValue() - 1];
     }
 
-    public static String getPriorityString(Priority priority){
-        return priorityText[priority.getIntValue()-1];
+    public static String getPriorityString(Priority priority) {
+        return priorityText[priority.getIntValue() - 1];
     }
 
-    public static ArrayList<Folder> loadFolders(Context context){
+    public static ArrayList<Folder> loadFolders(Context context) {
         ArrayList<Folder> listOfFolders;
-        SharedPreferences sharedPreferences = context.getSharedPreferences(LOAD_FOLDERS, context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(LOAD_FOLDERS, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString(LOAD_FOLDERS, null);
         Type type = new TypeToken<ArrayList<Folder>>() {
@@ -85,9 +85,9 @@ public class Helper {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static void saveData(Context context, ArrayList<Folder> listOfFolders){
-        listOfFolders=sortTaskInProjects(listOfFolders);
-        SharedPreferences sharedPreferences = context.getSharedPreferences(LOAD_FOLDERS, context.MODE_PRIVATE);
+    public static void saveData(Context context, ArrayList<Folder> listOfFolders) {
+        listOfFolders = sortTaskInProjects(listOfFolders);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(LOAD_FOLDERS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(listOfFolders);
@@ -99,7 +99,7 @@ public class Helper {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private static ArrayList<Folder> sortTaskInProjects(ArrayList<Folder> listOfFolders) {
-        for (Folder folder : listOfFolders){
+        for (Folder folder : listOfFolders) {
             ArrayList<Task> tasks = folder.getListOfTasks();
             Collections.sort(tasks, Comparator.comparing(Task::isDone).thenComparing(Task::getDeadline).thenComparing(Task::getPriority, Comparator.reverseOrder()));
             folder.setListOfTasks(tasks);

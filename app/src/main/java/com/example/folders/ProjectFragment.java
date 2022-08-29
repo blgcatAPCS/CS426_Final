@@ -31,17 +31,15 @@ import com.example.task.TaskOverview;
 import java.util.ArrayList;
 
 public class ProjectFragment extends Fragment {
-    RecyclerFolderAdapter adapter;
-    ImageView btnOpenDialog;
-    RecyclerView recyclerView;
-    ArrayList<Folder> listOfFolders;
-
-    private View view;
-
     private final int GO_TO_TASKOVERVIEW_REQUEST_CODE = 2;
     private final String TASK_ITEM = "task";
     private final String FOLDER_POSITION = "position";
     private final String LOAD_FOLDERS = "folders";
+    RecyclerFolderAdapter adapter;
+    ImageView btnOpenDialog;
+    RecyclerView recyclerView;
+    ArrayList<Folder> listOfFolders;
+    private View view;
 
     @Nullable
     @Override
