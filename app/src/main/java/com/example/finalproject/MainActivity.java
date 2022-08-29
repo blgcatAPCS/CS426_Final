@@ -1,60 +1,96 @@
 package com.example.finalproject;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.view.MenuItem;
 
-import com.example.folders.Folder;
-import com.example.folders.FolderList;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.folders.ProjectFragment;
+import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity {
-
-    private static final int MY_REQUEST_CODE = 3;
-    private ArrayList<Folder> listOfFolders = new ArrayList<>();
-    Button button;
-
-    // T thêm 1 Button để test thử chạy đc hong nha m
-
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        button = findViewById(R.id.button_go_to_folder);
+        initView(savedInstanceState);
+    }
 
-        // Xử lý chuyển và lấy dữ liệu qua list of folders
+    private void initView(Bundle savedInstanceState) {
+        Toolbar toolbar = findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                ArrayList<Folder> folders = new ArrayList<>();
-//                folders = (ArrayList) listOfFolders.clone();
-                Intent intent = new Intent(MainActivity.this, FolderList.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("folder list", listOfFolders);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, MY_REQUEST_CODE);
-            }
-        });
+        drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TodayFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_today);
+        }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (MY_REQUEST_CODE == requestCode && Activity.RESULT_OK == resultCode)
-        {
-            Bundle bundle = data.getExtras();
-            listOfFolders = (ArrayList<Folder>) bundle.get("folder list result");
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawer.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_project:
+                getSupportActionBar().setTitle("Your projects");
+                startProjectView();
+                break;
+
+            case R.id.nav_today:
+                getSupportActionBar().setTitle("Your today tasks");
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TodayFragment()).commit();
+                break;
+
+            case R.id.nav_calendar:
+                getSupportActionBar().setTitle("Calendar");
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CalendarFragment()).commit();
+                break;
+
+            default:
+                return false;
+        }
+
+        drawer.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
+
+    private void startProjectView() {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle("Your Projects");
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProjectFragment()).commit();
     }
 }
