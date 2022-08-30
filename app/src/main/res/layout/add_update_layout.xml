@@ -27,6 +27,7 @@
         android:background="#fff"
         android:hint="Enter Project Name"
         android:inputType="text"
+        android:minHeight="48dp"
         android:padding="11dp" />
 
     <Button

@@ -56,6 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:entries="@array/spinner_priority"
+            android:minHeight="48dp"
             app:layout_constraintBottom_toBottomOf="@id/text_view_priority"
             app:layout_constraintLeft_toLeftOf="@id/text_view_select_deadline"
             app:layout_constraintTop_toBottomOf="@id/text_view_deadline" />
