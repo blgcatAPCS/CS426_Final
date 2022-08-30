@@ -56,7 +56,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         Log.d("onBindView", task.toString());
 
         holder.setTaskName(task.getName());
-        holder.setDeadline(Helper.dateToString(task.getDeadline()));
+
+        if (TaskOverview.function.equals("folder")) {
+            holder.setDeadline(Helper.dateToString(task.getDeadline()));
+        }
+        else
+            holder.setDeadline(Helper.dateToTime(task.getDeadline()));
+
         holder.setCheckBox(task.isDone());
         holder.setPriority(task.getPriority());
 

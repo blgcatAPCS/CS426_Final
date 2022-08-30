@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 public class TaskOverview extends AppCompatActivity implements TaskAdapter.CallbackInterface {
+    private static final String FUNCTION_KEY = "function key";
     private final String LOAD_TASKS = "tasks";
     private final String FOLDER_POSITION = "position";
     private final String TASK_ITEM = "task";
@@ -30,6 +31,8 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
     private ArrayList<Task> tasks;
     private ImageView addTaskButton;
     private int folderPosition;
+
+    public static String function = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +55,10 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         addTaskButton.setOnClickListener(v -> {
             Log.d("addTaskButton", "goIn");
             Intent intent = new Intent(v.getContext(), TaskDetail.class);
-            intent.putExtra("Add", true);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("Add", true);
+            bundle.putString(FUNCTION_KEY, function);
+            intent.putExtras(bundle);
             startActivityForResult(intent, ADD_TASK_REQUEST);
         });
     }
@@ -72,6 +78,8 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
             tasks = new ArrayList<>();
         }
         Log.d("loadData", "tasks: " + tasks);
+
+        function = bundle.getString(FUNCTION_KEY);
     }
 
     private void cancelTaskOverview() {
@@ -136,6 +144,7 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         Bundle bundle = new Bundle();
         bundle.putSerializable(TASK_ITEM, tasks);
         bundle.putInt(FOLDER_POSITION, folderPosition);
+        bundle.putString(FUNCTION_KEY, function);
         resultIntent.putExtra("BUNDLE", bundle);
         setResult(Activity.RESULT_OK, resultIntent);
     }

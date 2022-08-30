@@ -1,7 +1,9 @@
 package com.example.task;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,13 +31,18 @@ import com.example.finalproject.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class TaskDetail extends AppCompatActivity {
+    private static final String FUNCTION_KEY = "function key";
     private EditText taskName, description;
     private TextView deadline;
     private Button saveButton, cancelButton;
     private ActionBar actionBar;
     private Spinner prioritySpinner;
+
+    public static String function = "";
+    int hour, minute;
 
     private int priority;
     private int position;
@@ -47,6 +55,7 @@ public class TaskDetail extends AppCompatActivity {
 
         loadComponent();
         loadData();
+
         setupSelectingDate();
         saveButton.setOnClickListener(v -> {
             if (!checkValid()) return;
@@ -73,7 +82,9 @@ public class TaskDetail extends AppCompatActivity {
     }
 
     private void loadData() {
-        if (getIntent().getBooleanExtra("Add", false)) {
+        Bundle bundle = getIntent().getExtras();
+        function = bundle.getString(FUNCTION_KEY);
+        if (bundle.getBoolean("Add", false)) {
             addActivity();
         } else {
             updateActivity();
@@ -92,13 +103,17 @@ public class TaskDetail extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "You must select deadline.", Toast.LENGTH_SHORT).show();
             return false;
         }
-        Date selectedDeadline = Helper.stringToDate(deadline.getText().toString());
-        Date curDate = Calendar.getInstance().getTime();
-        if (!Helper.isSameDay(selectedDeadline, curDate) && selectedDeadline.before(curDate)) {
-            deadline.setTextColor(Color.RED);
-            Toast.makeText(getApplicationContext(), "You must select today or the day after", Toast.LENGTH_SHORT).show();
-            return false;
+
+        if (function.equals("folder")) {
+            Date selectedDeadline = Helper.stringToDate(deadline.getText().toString());
+            Date curDate = Calendar.getInstance().getTime();
+            if (!Helper.isSameDay(selectedDeadline, curDate) && selectedDeadline.before(curDate)) {
+                deadline.setTextColor(Color.RED);
+                Toast.makeText(getApplicationContext(), "You must select today or the day after", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
+
         return true;
     }
 
@@ -158,18 +173,46 @@ public class TaskDetail extends AppCompatActivity {
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DATE);
 
-        deadline.setOnClickListener(v -> {
-            DatePickerDialog dialog = new DatePickerDialog(TaskDetail.this, (view, year1, month1, dayOfMonth) -> {
-                month1++;
-                String date = dayOfMonth + "/";
-                if (month1 < 10) {
-                    date += "0" + month1 + "/" + year1;
-                } else date += month1 + "/" + year1;
-                deadline.setText(date);
-            }, year, month, day);
-            dialog.show();
-            deadline.setTextColor(Color.BLACK);
+        deadline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (function.equals("folder"))
+                    calendarDialog(v, year, month, day);
+                else
+                    timerDialog(v);
+            }
         });
+    }
+
+    private void timerDialog(View v) {
+        TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                hour = selectedHour;
+                minute = selectedMinute;
+                deadline.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+            }
+        };
+
+        int style = AlertDialog.THEME_HOLO_LIGHT;
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(TaskDetail.this, style, onTimeSetListener, hour, minute, true);
+
+        timePickerDialog.setTitle("Select Time");
+        timePickerDialog.show();
+    }
+
+    private void calendarDialog(View v, int year, int month, int day) {
+        DatePickerDialog dialog = new DatePickerDialog(TaskDetail.this, (view, year1, month1, dayOfMonth) -> {
+            month1++;
+            String date = dayOfMonth + "/";
+            if (month1 < 10) {
+                date += "0" + month1 + "/" + year1;
+            } else date += month1 + "/" + year1;
+            deadline.setText(date);
+        }, year, month, day);
+        dialog.show();
+        deadline.setTextColor(Color.BLACK);
     }
 
     @Override

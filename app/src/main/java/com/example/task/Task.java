@@ -26,7 +26,7 @@ public class Task implements Serializable {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Task(String _name, Date _deadline, String _description, Priority _priority, boolean _done) {
         setName(_name);
-        setDeadline(_deadline);
+        this.deadline = _deadline;
         setDescription(_description);
         setDone(_done);
         setPriority(_priority);
@@ -77,7 +77,12 @@ public class Task implements Serializable {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setDeadline(String deadline) throws ParseException {
-        this.deadline = new SimpleDateFormat("dd/MM/yyyy").parse(deadline);
+        if (TaskDetail.function.equals("daily")){
+            this.deadline = new SimpleDateFormat("HH:mm").parse(deadline);
+        }
+        else{
+            this.deadline = new SimpleDateFormat("dd/MM/yyyy").parse(deadline);
+        }
     }
 
     public String getDescription() {

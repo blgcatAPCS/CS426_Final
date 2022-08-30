@@ -8,6 +8,7 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.example.Priority.Priority;
+import com.example.calendar.Dates;
 import com.example.folders.Folder;
 import com.example.task.Task;
 import com.google.gson.Gson;
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Helper {
@@ -32,6 +34,7 @@ public class Helper {
     private static final String[] priorityText = {"High", "Medium", "Low"};
     private static final String LOAD_FOLDERS = "folders";
     static public ArrayList<Folder> projects;
+    private static final String LOAD_DATES = "dates";
 
     static {
         for (Priority type : Priority.values()) {
@@ -39,8 +42,14 @@ public class Helper {
         }
     }
 
-    public static String dateToString(Date date) {
+    public static String dateToString(Date date){
         return simpleDateFormat.format(date);
+    }
+
+    public static String dateToTime(Date date) {
+        int hour = date.getHours();
+        int minute = date.getMinutes();
+        return  String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
     }
 
     public static Date stringToDate(String date) {
@@ -65,6 +74,21 @@ public class Helper {
 
     public static String getPriorityString(Priority priority) {
         return priorityText[priority.getIntValue() - 1];
+    }
+
+    public static ArrayList<Dates> loadDates(Context context){
+        ArrayList<Dates> listOfDays;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(LOAD_DATES, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(LOAD_DATES, null);
+        Type type = new TypeToken<ArrayList<Dates>>() {
+        }.getType();
+        listOfDays = gson.fromJson(json, type);
+
+        if (listOfDays == null)
+            listOfDays = new ArrayList<>();
+
+        return listOfDays;
     }
 
     public static ArrayList<Folder> loadFolders(Context context) {
