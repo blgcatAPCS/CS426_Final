@@ -42,7 +42,6 @@ public class TaskDetail extends AppCompatActivity {
     private Spinner prioritySpinner;
 
     public static String function = "";
-    int hour, minute;
 
     private int priority;
     private int position;
@@ -173,24 +172,27 @@ public class TaskDetail extends AppCompatActivity {
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DATE);
 
+        final int hour = calendar.getTime().getHours();
+        final int minute = calendar.getTime().getMinutes();
+
         deadline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (function.equals("folder"))
                     calendarDialog(v, year, month, day);
                 else
-                    timerDialog(v);
+                    timerDialog(v, hour, minute);
             }
         });
     }
 
-    private void timerDialog(View v) {
+    private void timerDialog(View v, int hour, int minute) {
         TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                hour = selectedHour;
-                minute = selectedMinute;
-                deadline.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                int hour1 = selectedHour;
+                int minute1 = selectedMinute;
+                deadline.setText(String.format(Locale.getDefault(), "%02d:%02d", hour1, minute1));
             }
         };
 
