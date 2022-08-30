@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff"
-        android:hint="Enter Folder Name"
+        android:hint="Enter Project Name"
         android:inputType="text"
         android:padding="11dp" />
 
