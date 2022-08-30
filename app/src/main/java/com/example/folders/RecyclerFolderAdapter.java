@@ -45,7 +45,7 @@ public class RecyclerFolderAdapter extends RecyclerView.Adapter<RecyclerFolderAd
         // Khi nhấn dữ lâu 1 item thì sẽ gợi ý Delete
         holder.llRow.setOnLongClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext())
-                    .setTitle("Delete Folder")
+                    .setTitle("Delete Project")
                     .setMessage("Are you sure want to delete")
                     .setIcon(R.drawable.ic_baseline_delete_24)
                     .setPositiveButton("Yes", (dialog, which) -> {
