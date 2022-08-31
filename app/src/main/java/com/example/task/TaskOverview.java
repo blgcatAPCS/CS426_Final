@@ -23,6 +23,7 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
     private final String LOAD_TASKS = "tasks";
     private final String FOLDER_POSITION = "position";
     private final String TASK_ITEM = "task";
+    private final String DATE = "date";
     private final int ADD_TASK_REQUEST = 0;
     private final int EDIT_TASK_REQUEST = 1;
     private RecyclerView rcvTasks;
@@ -31,6 +32,12 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
     private ImageView addTaskButton;
     private int folderPosition;
 
+<<<<<<< Updated upstream
+=======
+    public static String function = "";
+    static String date;
+
+>>>>>>> Stashed changes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,13 +59,20 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         addTaskButton.setOnClickListener(v -> {
             Log.d("addTaskButton", "goIn");
             Intent intent = new Intent(v.getContext(), TaskDetail.class);
+<<<<<<< Updated upstream
             intent.putExtra("Add", true);
+=======
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("Add", true);
+            bundle.putString(FUNCTION_KEY, function);
+            bundle.putString(DATE, date);
+            intent.putExtras(bundle);
+>>>>>>> Stashed changes
             startActivityForResult(intent, ADD_TASK_REQUEST);
         });
     }
 
     private void loadData() {
-
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("BUNDLE");
 
@@ -71,7 +85,12 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         if (tasks == null) {
             tasks = new ArrayList<>();
         }
+        date = bundle.getString(DATE);
         Log.d("loadData", "tasks: " + tasks);
+<<<<<<< Updated upstream
+=======
+        function = bundle.getString(FUNCTION_KEY);
+>>>>>>> Stashed changes
     }
 
     private void cancelTaskOverview() {
@@ -125,8 +144,12 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
     public void onHandleSelection(int position, Task task) {
         Log.d("editTask", task.toString());
         Intent intent = new Intent(getApplicationContext(), TaskDetail.class);
-        intent.putExtra("position", position);
-        intent.putExtra("newTask", task.toArrayListString());
+        Bundle bundle = new Bundle();
+        bundle.putInt("position", position);
+        bundle.putSerializable("newTask", task);
+        bundle.putString(FUNCTION_KEY, function);
+        bundle.putString(DATE, date);
+        intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_TASK_REQUEST);
     }
 

@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.calendar.CalendarFragment;
 import com.example.folders.ProjectFragment;
 import com.example.today.TodayFragment;
 import com.google.android.material.navigation.NavigationView;

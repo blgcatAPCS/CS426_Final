@@ -67,6 +67,38 @@ public class Helper {
         return priorityText[priority.getIntValue() - 1];
     }
 
+<<<<<<< Updated upstream
+=======
+    public static ArrayList<Task> loadDates(Context context, String name){
+        ArrayList<Task> listOfDays;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(name, null);
+        Type type = new TypeToken<ArrayList<Task>>() {
+        }.getType();
+        listOfDays = gson.fromJson(json, type);
+
+        if (listOfDays == null)
+            listOfDays = new ArrayList<>();
+
+        return listOfDays;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static void saveDates(Context context, String name, ArrayList<Task> tasks){
+        tasks = sortTask(tasks);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(tasks);
+        editor.putString(name, json);
+        editor.apply();
+
+        Log.d("saveData", json);
+
+    }
+
+>>>>>>> Stashed changes
     public static ArrayList<Folder> loadFolders(Context context) {
         ArrayList<Folder> listOfFolders;
         SharedPreferences sharedPreferences = context.getSharedPreferences(LOAD_FOLDERS, Context.MODE_PRIVATE);
@@ -100,11 +132,15 @@ public class Helper {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private static ArrayList<Folder> sortTaskInProjects(ArrayList<Folder> listOfFolders) {
         for (Folder folder : listOfFolders) {
-            ArrayList<Task> tasks = folder.getListOfTasks();
-            Collections.sort(tasks, Comparator.comparing(Task::isDone).thenComparing(Task::getDeadline).thenComparing(Task::getPriority, Comparator.reverseOrder()));
-            folder.setListOfTasks(tasks);
+            folder.setListOfTasks(sortTask(folder.getListOfTasks()));
         }
         return listOfFolders;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private static ArrayList<Task> sortTask(ArrayList<Task> tasks){
+        Collections.sort(tasks, Comparator.comparing(Task::isDone).thenComparing(Task::getDeadline).thenComparing(Task::getPriority, Comparator.reverseOrder()));
+        return tasks;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
