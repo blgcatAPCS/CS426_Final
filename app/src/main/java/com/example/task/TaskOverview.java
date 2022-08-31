@@ -33,7 +33,7 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
     private ImageView addTaskButton;
     private int folderPosition;
 
-    public static String function = "";
+    private String function = "";
     static String date;
 
     @Override
@@ -62,7 +62,7 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
             bundle.putBoolean("Add", true);
             bundle.putString(FUNCTION_KEY, function);
             bundle.putString(DATE, date);
-            intent.putExtras(bundle);
+            intent.putExtra("BUNDLE", bundle);
             startActivityForResult(intent, ADD_TASK_REQUEST);
         });
     }
@@ -141,7 +141,7 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         bundle.putSerializable("newTask", task);
         bundle.putString(FUNCTION_KEY, function);
         bundle.putString(DATE, date);
-        intent.putExtras(bundle);
+        intent.putExtra("BUNDLE", bundle);
         startActivityForResult(intent, EDIT_TASK_REQUEST);
     }
 

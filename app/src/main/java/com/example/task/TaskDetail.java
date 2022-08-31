@@ -32,7 +32,7 @@ import java.util.Date;
 public class TaskDetail extends AppCompatActivity {
     private static final String FUNCTION_KEY = "function key";
     private static final String DATE = "date";
-    public static String function = "";
+    private String function = "";
     private EditText taskName, description;
     private TextView deadline;
     private Button saveButton, cancelButton;
@@ -76,16 +76,16 @@ public class TaskDetail extends AppCompatActivity {
     }
 
     private void loadData() {
-        if (getIntent().getBooleanExtra("Add", false)) {
-            Bundle bundle = getIntent().getExtras();
-            function = bundle.getString(FUNCTION_KEY);
-            date = bundle.getString(DATE);
-            if (bundle.getBoolean("Add", false)) {
-                addActivity();
-            } else {
-                updateActivity();
-            }
+        Bundle bundle = getIntent().getBundleExtra("BUNDLE");
+        Log.d("loadData", String.valueOf((bundle!=null)));
+        function = bundle.getString(FUNCTION_KEY);
+        date = bundle.getString(DATE);
+        if (bundle.getBoolean("Add", false)) {
+            addActivity();
+        } else {
+            updateActivity();
         }
+        Log.d("loadData",function);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -161,7 +161,6 @@ public class TaskDetail extends AppCompatActivity {
     }
 
     private void setupSelectingDate() {
-
         if (function.equals("folder")) {
             final Calendar calendar = Calendar.getInstance();
             final int year = calendar.get(Calendar.YEAR);
@@ -211,4 +210,4 @@ public class TaskDetail extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-};
+}

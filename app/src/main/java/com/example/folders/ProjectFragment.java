@@ -35,6 +35,7 @@ public class ProjectFragment extends Fragment {
     private final String TASK_ITEM = "task";
     private final String FOLDER_POSITION = "position";
     private final String LOAD_FOLDERS = "folders";
+    private static final String FUNCTION_KEY = "function key";
     RecyclerFolderAdapter adapter;
     ImageView btnOpenDialog;
     RecyclerView recyclerView;
@@ -102,6 +103,7 @@ public class ProjectFragment extends Fragment {
         Bundle args = new Bundle();
         args.putSerializable(TASK_ITEM, folder.getListOfTasks());
         args.putInt(FOLDER_POSITION, position);
+        args.putString(FUNCTION_KEY, "folder");
 
         intent.putExtra("BUNDLE", args);
         startActivityForResult(intent, GO_TO_TASKOVERVIEW_REQUEST_CODE);

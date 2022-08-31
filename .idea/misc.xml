@@ -20,7 +20,7 @@
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/folder_row.xml" value="0.17180417044424298" />
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/fragment_calendar.xml" value="0.1" />
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/fragment_project.xml" value="0.33" />
-        <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/fragment_today.xml" value="0.1" />
+        <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/fragment_today.xml" value="0.33" />
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/nav_header.xml" value="0.25" />
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/priority_spinner_adapter.xml" value="0.5" />
         <entry key="..\:/KHTN/CS/CS426/CS426_Final/app/src/main/res/layout/task_item.xml" value="0.33" />
@@ -42,6 +42,8 @@
         <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/menu/folder_menu.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/menu/main_actions.xml" value="0.1" />
         <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_1/app/src/main/res/menu/task_menu.xml" value="0.264" />
+        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_Khanh/app/src/main/res/layout/date_item.xml" value="0.1" />
+        <entry key="..\:/Users/Gia Khanh/Desktop/CS426_Final_Khanh/app/src/main/res/layout/fragment_calendar.xml" value="0.1" />
       </map>
     </option>
   </component>
