@@ -55,6 +55,8 @@ public class TodayFragment extends Fragment {
         Date curDate = new Date();
         for (int i = 0; i < projects.size(); ++i) {
             ArrayList<Task> tasks = projects.get(i).getListOfTasks();
+            if (tasks == null)
+                continue;
             for (int j = 0; j < tasks.size(); ++j) {
                 Task task = tasks.get(j);
                 if (task.getDeadline().getDate() == curDate.getDate()) {

@@ -1,7 +1,9 @@
 package com.example.task;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +31,7 @@ import com.example.finalproject.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class TaskDetail extends AppCompatActivity {
     private static final String FUNCTION_KEY = "function key";
@@ -196,6 +200,24 @@ public class TaskDetail extends AppCompatActivity {
         }, year, month, day);
         dialog.show();
         deadline.setTextColor(Color.BLACK);
+    }
+
+    private void timerDialog(View v, int hour, int minute) {
+        TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                int hour1 = selectedHour;
+                int minute1 = selectedMinute;
+                deadline.setText(String.format(Locale.getDefault(), "%02d:%02d", hour1, minute1));
+            }
+        };
+
+        int style = AlertDialog.THEME_HOLO_LIGHT;
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, style, onTimeSetListener, hour, minute, true);
+
+        timePickerDialog.setTitle("Select Time");
+        timePickerDialog.show();
     }
 
     @Override
