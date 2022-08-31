@@ -28,6 +28,7 @@ import com.example.Priority.PrioritySpinnerAdapter;
 import com.example.finalproject.Helper;
 import com.example.finalproject.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -109,6 +110,17 @@ public class TaskDetail extends AppCompatActivity {
             if (!Helper.isSameDay(selectedDeadline, curDate) && selectedDeadline.before(curDate)) {
                 deadline.setTextColor(Color.RED);
                 Toast.makeText(getApplicationContext(), "You must select today or the day after", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        else if (function.equals("daily")){
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+            String curTime = simpleDateFormat.format(c.getTime());
+
+            if (deadline.getText().toString().compareTo(curTime) < 0){
+                deadline.setTextColor(Color.RED);
+                Toast.makeText(getApplicationContext(), "You must select a time in future", Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
