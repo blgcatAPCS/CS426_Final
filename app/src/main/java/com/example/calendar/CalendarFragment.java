@@ -2,6 +2,7 @@ package com.example.calendar;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,10 +25,14 @@ import com.example.finalproject.R;
 import com.example.task.Task;
 import com.example.task.TaskOverview;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class CalendarFragment extends Fragment {
@@ -37,13 +42,14 @@ public class CalendarFragment extends Fragment {
     private static final String DATE = "date";
     private static final String TASK_ITEM = "task";
 
-    private TextView textViewMonthYear;
+    public static TextView textViewMonthYear;
     private ImageView imageViewBackMonth, imageViewNextMonth;
     private RecyclerView calendarRecyclerView;
     CalendarAdapter calendarAdapter;
 
-    private LocalDate selectedDate;
-    ArrayList<Dates> daysInMonth;
+    public static LocalDate selectedDate;
+    static ArrayList<Dates> daysInMonth;
+    public static String monthYear;
 
     private View view;
 
@@ -60,6 +66,9 @@ public class CalendarFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setMonthView() {
+
+        monthYear = monthYearFromDate(selectedDate);
+
         textViewMonthYear.setText(monthYearFromDate(selectedDate));
         daysInMonth = daysInMonthArray(selectedDate);
 
@@ -77,6 +86,26 @@ public class CalendarFragment extends Fragment {
             return;
         }
 
+        // Check valid date chosen
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyy");
+        String curDate = simpleDateFormat.format(c.getTime());
+        try {
+            Date curDateDate = simpleDateFormat.parse(curDate);
+
+            String chosenDate = getDateSavedFormat(selectedDate, position);
+
+            Date chosenDateDate = simpleDateFormat.parse(chosenDate);
+
+            if (!Helper.isSameDay(chosenDateDate, curDateDate) && chosenDateDate.before(curDateDate)) {
+                Toast.makeText(view.getContext(), "Please select today or the day after", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+
+
         String dayMonthYear = getDateSavedFormat(selectedDate, position);
         Intent intent = new Intent(view.getContext(), TaskOverview.class);
         Bundle args = new Bundle();
@@ -91,14 +120,18 @@ public class CalendarFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private String getDateViewFormat(LocalDate selectedDate, int position) {
-        String res = String.format(Locale.getDefault(), "%02d", position);
+//        String res = String.format(Locale.getDefault(), "%02d", position);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("/MM/yyyy");
+//        return  res +selectedDate.format(formatter);
+
+        String res = String.format(Locale.getDefault(), "%02d", Integer.parseInt(daysInMonth.get(position).getDayOfMonth()));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("/MM/yyyy");
         return  res +selectedDate.format(formatter);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private static String getDateSavedFormat(LocalDate date, int position){
-        String res = String.format(Locale.getDefault(), "%02d", position);
+    public static String getDateSavedFormat(LocalDate date, int position){
+        String res = String.format(Locale.getDefault(), "%02d", Integer.parseInt(daysInMonth.get(position).getDayOfMonth()));
         res += monthYearFromDate_get_number(date);
         return res;
     }
