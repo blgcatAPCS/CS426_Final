@@ -5,8 +5,8 @@ import com.example.task.Task;
 import java.util.ArrayList;
 
 public class Dates {
-    private String dayOfWeek;
-    private String dayOfMonth;
+    private final String dayOfWeek;
+    private final String dayOfMonth;
     public ArrayList<Task> listOfTasks;
 
     public Dates(String dayOfWeek, String dayOfMonth){

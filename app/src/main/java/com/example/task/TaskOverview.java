@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.finalproject.R;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 
 public class TaskOverview extends AppCompatActivity implements TaskAdapter.CallbackInterface {
@@ -100,35 +99,30 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_CANCELED) return;;
         Log.d("TaskDetailResult", "Request Code: " + requestCode + " Result code: " + resultCode);
-        ArrayList<String> newTaskInfo = data.getStringArrayListExtra("newTask");
-        if (newTaskInfo == null) return;
+        Bundle bundle = data.getBundleExtra("BUNDLE");
+        if (bundle==null) return;
+        Task newTask = (Task) bundle.getSerializable("newTask");
+        if (newTask == null) return;
         if (requestCode == ADD_TASK_REQUEST && resultCode == Activity.RESULT_OK) {
-            addTask(newTaskInfo);
+            addTask(newTask);
         } else if (requestCode == EDIT_TASK_REQUEST && resultCode == Activity.RESULT_OK) {
-            try {
-                updateTask(data.getIntExtra("position", -1), newTaskInfo);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            updateTask(data.getIntExtra("position", -1), newTask);
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void addTask(ArrayList<String> newTaskInfo) {
-        try {
-            tasks.add(new Task(newTaskInfo));
-            taskAdapter.notifyAdapterWholeDataSetChanged();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+    private void addTask(Task newTaskInfo) {
+        tasks.add(newTaskInfo);
+        taskAdapter.notifyAdapterWholeDataSetChanged();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void updateTask(int position, ArrayList<String> newTaskInfo) throws ParseException {
+    private void updateTask(int position, Task newTaskInfo){
         Log.d("updateTask", newTaskInfo.toString());
         if (position == -1) throw new IllegalArgumentException("Position invalid");
-        taskAdapter.notifyAdapterItemMoved(position, new Task(newTaskInfo));
+        taskAdapter.notifyAdapterItemMoved(position, newTaskInfo);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -137,8 +131,9 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         Log.d("editTask", task.toString());
         Intent intent = new Intent(getApplicationContext(), TaskDetail.class);
         Bundle bundle = new Bundle();
-        bundle.putInt("position", position);
+        intent.putExtra("position", position);
         bundle.putSerializable("newTask", task);
+        bundle.putBoolean("Add", false);
         bundle.putString(FUNCTION_KEY, function);
         bundle.putString(DATE, date);
         intent.putExtra("BUNDLE", bundle);
