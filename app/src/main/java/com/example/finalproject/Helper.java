@@ -67,8 +67,6 @@ public class Helper {
         return priorityText[priority.getIntValue() - 1];
     }
 
-<<<<<<< Updated upstream
-=======
     public static ArrayList<Task> loadDates(Context context, String name){
         ArrayList<Task> listOfDays;
         SharedPreferences sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
@@ -98,7 +96,6 @@ public class Helper {
 
     }
 
->>>>>>> Stashed changes
     public static ArrayList<Folder> loadFolders(Context context) {
         ArrayList<Folder> listOfFolders;
         SharedPreferences sharedPreferences = context.getSharedPreferences(LOAD_FOLDERS, Context.MODE_PRIVATE);

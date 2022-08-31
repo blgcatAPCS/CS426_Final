@@ -56,13 +56,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         Log.d("onBindView", task.toString());
 
         holder.setTaskName(task.getName());
-<<<<<<< Updated upstream
         holder.setDeadline(Helper.dateToString(task.getDeadline()));
-=======
-
-        holder.setDeadline(Helper.dateToString(task.getDeadline()));
-
->>>>>>> Stashed changes
         holder.setCheckBox(task.isDone());
         holder.setPriority(task.getPriority());
 

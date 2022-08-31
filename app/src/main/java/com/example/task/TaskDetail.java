@@ -30,18 +30,15 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class TaskDetail extends AppCompatActivity {
-<<<<<<< Updated upstream
-=======
     private static final String FUNCTION_KEY = "function key";
     private static final String DATE = "date";
->>>>>>> Stashed changes
+    public static String function = "";
     private EditText taskName, description;
     private TextView deadline;
     private Button saveButton, cancelButton;
     private ActionBar actionBar;
     private Spinner prioritySpinner;
     private String date;
-
     private int priority;
     private int position;
 
@@ -79,17 +76,15 @@ public class TaskDetail extends AppCompatActivity {
     }
 
     private void loadData() {
-<<<<<<< Updated upstream
         if (getIntent().getBooleanExtra("Add", false)) {
-=======
-        Bundle bundle = getIntent().getExtras();
-        function = bundle.getString(FUNCTION_KEY);
-        date = bundle.getString(DATE);
-        if (bundle.getBoolean("Add", false)) {
->>>>>>> Stashed changes
-            addActivity();
-        } else {
-            updateActivity();
+            Bundle bundle = getIntent().getExtras();
+            function = bundle.getString(FUNCTION_KEY);
+            date = bundle.getString(DATE);
+            if (bundle.getBoolean("Add", false)) {
+                addActivity();
+            } else {
+                updateActivity();
+            }
         }
     }
 
@@ -166,33 +161,26 @@ public class TaskDetail extends AppCompatActivity {
     }
 
     private void setupSelectingDate() {
-<<<<<<< Updated upstream
-        final Calendar calendar = Calendar.getInstance();
-        final int year = calendar.get(Calendar.YEAR);
-        final int month = calendar.get(Calendar.MONTH);
-        final int day = calendar.get(Calendar.DATE);
 
-        deadline.setOnClickListener(v -> {
-            DatePickerDialog dialog = new DatePickerDialog(TaskDetail.this, (view, year1, month1, dayOfMonth) -> {
-                month1++;
-                String date = dayOfMonth + "/";
-                if (month1 < 10) {
-                    date += "0" + month1 + "/" + year1;
-                } else date += month1 + "/" + year1;
-                deadline.setText(date);
-            }, year, month, day);
-            dialog.show();
-            deadline.setTextColor(Color.BLACK);
-        });
-=======
-        if (function.equals("folder")){
+        if (function.equals("folder")) {
             final Calendar calendar = Calendar.getInstance();
             final int year = calendar.get(Calendar.YEAR);
             final int month = calendar.get(Calendar.MONTH);
             final int day = calendar.get(Calendar.DATE);
-            deadline.setOnClickListener(v -> calendarDialog(v, year, month, day));
-        }
-        else{
+
+            deadline.setOnClickListener(v -> {
+                DatePickerDialog dialog = new DatePickerDialog(TaskDetail.this, (view, year1, month1, dayOfMonth) -> {
+                    month1++;
+                    String date = dayOfMonth + "/";
+                    if (month1 < 10) {
+                        date += "0" + month1 + "/" + year1;
+                    } else date += month1 + "/" + year1;
+                    deadline.setText(date);
+                }, year, month, day);
+                dialog.show();
+                deadline.setTextColor(Color.BLACK);
+            });
+        } else {
             deadline.setText(date);
         }
     }
@@ -208,7 +196,6 @@ public class TaskDetail extends AppCompatActivity {
         }, year, month, day);
         dialog.show();
         deadline.setTextColor(Color.BLACK);
->>>>>>> Stashed changes
     }
 
     @Override
@@ -224,4 +211,4 @@ public class TaskDetail extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-}
+};

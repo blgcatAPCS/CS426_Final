@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public class TaskOverview extends AppCompatActivity implements TaskAdapter.CallbackInterface {
     private final String LOAD_TASKS = "tasks";
+    private static final String FUNCTION_KEY = "function key";
     private final String FOLDER_POSITION = "position";
     private final String TASK_ITEM = "task";
     private final String DATE = "date";
@@ -32,12 +33,9 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
     private ImageView addTaskButton;
     private int folderPosition;
 
-<<<<<<< Updated upstream
-=======
     public static String function = "";
     static String date;
 
->>>>>>> Stashed changes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,15 +57,12 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         addTaskButton.setOnClickListener(v -> {
             Log.d("addTaskButton", "goIn");
             Intent intent = new Intent(v.getContext(), TaskDetail.class);
-<<<<<<< Updated upstream
             intent.putExtra("Add", true);
-=======
             Bundle bundle = new Bundle();
             bundle.putBoolean("Add", true);
             bundle.putString(FUNCTION_KEY, function);
             bundle.putString(DATE, date);
             intent.putExtras(bundle);
->>>>>>> Stashed changes
             startActivityForResult(intent, ADD_TASK_REQUEST);
         });
     }
@@ -87,10 +82,7 @@ public class TaskOverview extends AppCompatActivity implements TaskAdapter.Callb
         }
         date = bundle.getString(DATE);
         Log.d("loadData", "tasks: " + tasks);
-<<<<<<< Updated upstream
-=======
         function = bundle.getString(FUNCTION_KEY);
->>>>>>> Stashed changes
     }
 
     private void cancelTaskOverview() {

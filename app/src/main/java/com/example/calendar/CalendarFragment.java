@@ -1,29 +1,20 @@
 package com.example.calendar;
 
-<<<<<<< Updated upstream:app/src/main/java/com/example/finalproject/CalendarFragment.java
-=======
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
->>>>>>> Stashed changes:app/src/main/java/com/example/calendar/CalendarFragment.java
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-<<<<<<< Updated upstream:app/src/main/java/com/example/finalproject/CalendarFragment.java
-
-public class CalendarFragment extends Fragment {
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_calendar, container, false);
-    }
-=======
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class CalendarFragment extends Fragment {
-
     private static final int GO_TO_TASKOVERVIEW_REQUEST_CODE = 2;
     private static final String FOLDER_POSITION = "position";
     private static final String FUNCTION_KEY = "function key";
@@ -182,6 +172,4 @@ public class CalendarFragment extends Fragment {
             }
         }
     }
-
->>>>>>> Stashed changes:app/src/main/java/com/example/calendar/CalendarFragment.java
 }
