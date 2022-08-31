@@ -136,6 +136,8 @@ public class Helper {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private static ArrayList<Task> sortTask(ArrayList<Task> tasks){
+        if (tasks == null)
+            return null;
         Collections.sort(tasks, Comparator.comparing(Task::isDone).thenComparing(Task::getDeadline).thenComparing(Task::getPriority, Comparator.reverseOrder()));
         return tasks;
     }

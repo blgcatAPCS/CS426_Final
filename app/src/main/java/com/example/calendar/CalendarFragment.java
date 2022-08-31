@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,6 +43,7 @@ public class CalendarFragment extends Fragment {
     CalendarAdapter calendarAdapter;
 
     private LocalDate selectedDate;
+    ArrayList<Dates> daysInMonth;
 
     private View view;
 
@@ -59,7 +61,7 @@ public class CalendarFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setMonthView() {
         textViewMonthYear.setText(monthYearFromDate(selectedDate));
-        ArrayList<Dates> daysInMonth = daysInMonthArray(selectedDate);
+        daysInMonth = daysInMonthArray(selectedDate);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(view.getContext(), 7);
 
@@ -70,6 +72,11 @@ public class CalendarFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void onClickGoToTaskOverviewDaily(int position) {
+        if (daysInMonth.get(position).getDayOfMonth().equals("")) {
+            Toast.makeText(view.getContext(), "Please choose another day", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String dayMonthYear = getDateSavedFormat(selectedDate, position);
         Intent intent = new Intent(view.getContext(), TaskOverview.class);
         Bundle args = new Bundle();
@@ -136,13 +143,16 @@ public class CalendarFragment extends Fragment {
         {
             if(i <= dayOfWeek || i > daysInMonth + dayOfWeek)
             {
-                daysInMonthArray.add(new Dates("", ""));
+                if (daysInMonthArray.size() < daysInMonth) {
+                    daysInMonthArray.add(new Dates("", ""));
+                }
             }
             else
             {
                 daysInMonthArray.add(new Dates("", String.valueOf(i - dayOfWeek)));
             }
         }
+
         return  daysInMonthArray;
     }
 
